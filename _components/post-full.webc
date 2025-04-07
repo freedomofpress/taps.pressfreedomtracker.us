@@ -1,0 +1,134 @@
+<article :class="horizontal ? 'horizontal' : ''" webc:root="override">
+    <img class="avatar" src="/media/avatar.jpeg"></img>
+    <div class="author">
+        <div class="name">Donald J. Trump</div>
+        <div class="username">@realDonaldTrump</div>
+    </div>
+    <div :class="`content content--${postSize(post.content)}`" @text="post.content"></div>
+    <div class="metadata">
+        <metadata-grid>
+            <dt>Posted</dt>
+            <dd>
+                <a class="original-link" :href="post.link">
+                    <time
+                        :datetime="post.dateString"
+                        @text="post.date.toLocaleString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                        })"
+                    ></time>
+                    (<span @text="post.platform" webc:nokeep></span>)
+                </a>
+            </dd>
+            <!---
+            There is no <if> component and the tags are not rendered to HTML. I just named it here to make
+            the purpose of each block clear.
+            --->
+            <if webc:nokeep webc:if="post.primaryTarget">
+                <dt>Target</dt>
+                <dd webc:if="post.secondaryTarget && (post.primaryTarget !== post.secondaryTarget)">
+                    <span @text="post.primaryTarget" webc:nokeep></span>
+                    (<span @text="post.secondaryTarget" webc:nokeep></span>)
+                </dd>
+                <dd webc:if="!post.secondaryTarget || (post.primaryTarget === post.secondaryTarget)">
+                    <span @text="post.primaryTarget" webc:nokeep></span>
+                </dd>
+            </if>
+            <if webc:nokeep webc:if="post.tags">
+                <dt>Tags</dt>
+                <dd>
+                    <span @text="post.tags.join(', ')" webc:nokeep></span>
+                </dd>
+            </if>
+            <if webc:nokeep webc:if="post.type">
+                <dt>Type</dt>
+                <dd>
+                    <span @text="post.type.join(', ')" webc:nokeep></span>
+                </dd>
+            </if>
+        </metadata-grid>
+    </div>
+</article>
+
+<script webc:setup>
+    const postSize = text => {
+        if (text.length > 500) return 'long'
+        if (text.length > 200) return 'medium'
+        return 'short'
+    }
+</script>
+
+<style webc:scoped="post-full">
+    :host {
+        --avatar-size: 60px;
+        --padding: var(--line-height-base);
+        --metadata-width: 50%;
+        margin-bottom: var(--line-height-base);
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        display: grid;
+        grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
+        grid-template-areas:
+            "avatar   author"
+            "avatar   content"
+            "metadata metadata";
+        gap: 0 var(--line-height-base);
+        overflow: hidden;
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Alternative Layout */
+    :host.horizontal {
+        grid-template-columns: calc(var(--avatar-size) + var(--padding)) auto calc(var(--metadata-width) - var(--padding));
+        grid-template-areas:
+            "avatar author metadata"
+            "avatar content metadata";
+    }
+
+    .avatar {
+        grid-area: avatar;
+        width: var(--avatar-size);
+        border-radius: 4px;
+        margin-top: var(--padding);
+        margin-left: var(--padding);
+    }
+
+    .author {
+        grid-area: author;
+        padding-top: var(--padding);
+        padding-right: var(--padding);
+        padding-bottom: calc(0.5 * var(--padding));
+    }
+    .author .name {
+        font-weight: bold;
+    }
+    .author .username {
+        color: var(--color-muted);
+    }
+
+    .content {
+        grid-area: content;
+        font-size: calc(2 * var(--font-size-base));
+        padding-right: var(--padding);
+        padding-bottom: var(--padding);
+    }
+
+    .content--medium {
+        font-size: calc(1.5 * var(--font-size-base));
+    }
+
+    .metadata {
+        grid-area: metadata;
+        background: var(--color-background-accent);
+        padding: var(--padding);
+    }
+
+    .content--long {
+        font-size: var(--font-size-base);
+    }
+
+    .original-link {
+        color: var(--color-muted);
+    }
+</style>

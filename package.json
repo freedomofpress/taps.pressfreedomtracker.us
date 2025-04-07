@@ -1,0 +1,20 @@
+{
+  "name": "trumptracker",
+  "version": "1.0.0",
+  "main": "",
+  "type": "module",
+  "scripts": {
+    "serve": "PROD=0 NODE_OPTIONS=\"--experimental-require-module\" eleventy --serve",
+    "build": "PROD=1 NODE_OPTIONS=\"--experimental-require-module\" eleventy"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-fetch": "^5.0.2",
+    "@11ty/eleventy-plugin-webc": "^0.11.2",
+    "cheerio": "^1.0.0",
+    "papaparse": "^5.5.2"
+  }
+}

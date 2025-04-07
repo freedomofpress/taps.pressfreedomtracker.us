@@ -1,0 +1,17 @@
+<post-full webc:for="post of posts" :@post="post"></post-full>
+
+<style webc:scoped="post-grid">
+    :host {
+        display: grid;
+        grid-template-columns: repeat(3, 33%);
+        grid-auto-flow: row;
+        column-gap: var(--line-height-base);
+        align-items: start;
+    }
+
+    @media (max-width: 1280px) {
+        :host {
+            grid-template-columns: 100%;
+        }
+    }
+</style>

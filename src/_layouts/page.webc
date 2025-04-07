@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title @raw="$data.title"></title>
+        <link rel="stylesheet" :href="getBundleFileUrl('css')" webc:keep />
+        <script :src="getBundleFileUrl('js')" webc:keep></script>
+    </head>
+    <body>
+        <fpf-banner></fpf-banner>
+        <site-header :intro="$data.intro"></site-header>
+        <main>
+            <div @raw="$data.content"></div>
+        </main>
+    </body>
+</html>
+
+<style>
+    :root {
+        --page-max-width: 128rem;
+        --page-padding-x: 4rem;
+        --font-size-base: 1.6rem;
+        --line-height-multiplier: 1.25;
+        --line-height-base: calc(var(--font-size-base) * var(--line-height-multiplier));
+        --font-family-sans: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif;
+        --color-base: #333;
+        --color-muted: #666;
+        --color-border: #ddd;
+        --color-background: #fff;
+        --color-background-accent: #f8f8f8;
+        --color-pft-yellow: #f2fc67;
+        font-size: 10px;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-multiplier);
+        font-family: var(--font-family-sans);
+        color: var(--color-base);
+        margin: 0;
+        padding: 0 var(--page-padding-x);
+    }
+
+    body > main {
+        max-width: var(--page-max-width);
+        margin: 2rem auto;
+    }
+
+    body > header {
+        margin-top: 4rem;
+    }
+</style>

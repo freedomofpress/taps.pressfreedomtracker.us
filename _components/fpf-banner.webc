@@ -1,0 +1,29 @@
+<div webc:root="override">
+    A project of the <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> team at <img src="/media/logo-mini.svg" /> <a href="https://freedom.press/">Freedom of the Press Foundation</a>.
+</div>
+
+<style webc:scoped="fpf-banner">
+    :host {
+        background-color: #000;
+        padding: 0.5rem 0;
+        color: #FFF;
+        margin: 0 calc(-1 * var(--page-padding-x));
+        padding: 1rem var(--page-padding-x);
+    }
+
+    img {
+        height: 1.2rem;
+        width: 1.5rem;
+        margin-left: 0.5em;
+    }
+
+    a {
+        color: #FFF;
+        text-decoration: underline;
+        text-decoration-color: #666;
+    }
+
+    a:hover {
+        text-decoration-color: #FFF;
+    }
+</style>

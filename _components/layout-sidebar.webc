@@ -1,0 +1,16 @@
+<div webc:root="override">
+    <section class="sidebar">
+        <slot name="sidebar"></slot>
+    </section>
+    <section class="main">
+        <slot name="main"></slot>
+    </section>
+</div>
+
+<style webc:scoped="layout-sidebar">
+    :host {
+        display: grid;
+        grid-template-columns: 33% 66%;
+        gap: var(--line-height-base);
+    }
+</style>

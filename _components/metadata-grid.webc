@@ -1,0 +1,30 @@
+<dl webc:root="override">
+    <slot></slot>
+</dl>
+
+<style webc:scoped="metadata-grid">
+        :host, dt, dd {
+            margin: 0;
+            padding: 0;
+        }
+
+        :host {
+            display: grid;
+            grid-template-columns: 0.3fr 1fr;
+        }
+
+        dt {
+            column: 1;
+            font-weight: bold;
+            margin-bottom: calc(0.5 * var(--line-height-base));
+        }
+
+        dt::after {
+            content: ':';
+        }
+
+        dd {
+            column: 2;
+            margin-bottom: calc(0.5 * var(--line-height-base));
+        }
+</style>

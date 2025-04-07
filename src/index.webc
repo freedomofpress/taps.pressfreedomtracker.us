@@ -1,0 +1,22 @@
+---
+layout: page.webc
+title: Trump Anti-Press Social Media Tracker
+intro: true
+---
+
+<h2>Recent Posts</h2>
+
+<post-grid :@posts="$data.posts.slice(0, 3)"></post-grid>
+
+<layout-sidebar>
+    <div slot="sidebar">
+        <h2>Filters</h2>
+    </div>
+    <div slot="main">
+        <h2>Full Archive</h2>
+        <post-list :@posts="$data.posts" slot="main"></post-list>
+    </div>
+</layout-sidebar>
+
+<script webc:setup>
+</script>

@@ -1,0 +1,1 @@
+<post-full webc:for="post of posts" :@post="post" :@horizontal="true"></post-full>
