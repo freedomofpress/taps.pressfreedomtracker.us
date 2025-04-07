@@ -1,0 +1,11 @@
+---
+layout: page.webc
+pagination:
+    data: posts
+    size: 1
+    alias: post
+eleventyComputed:
+    permalink: "post/<f @raw=\"post.hash\" webc:nokeep></f>/"
+---
+
+<post-full :@post="$data.post" :@horizontal="true"></post-full>

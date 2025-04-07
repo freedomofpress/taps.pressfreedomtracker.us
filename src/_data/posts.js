@@ -1,8 +1,15 @@
 import Fetch from '@11ty/eleventy-fetch'
-import Papa from 'papaparse';
+import Papa from 'papaparse'
+import crypto from 'crypto'
 
 const TRUTH_SOCIAL_URL = 'https://docs.google.com/spreadsheets/d/1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU/export?format=csv&id=1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU&gid=201966548'
 const TWITTER_URL = 'https://docs.google.com/spreadsheets/d/1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU/export?format=csv&id=1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU&gid=0'
+
+function hashString(str) {
+    const hash = crypto.createHash('sha256')
+    hash.update(str)
+    return hash.digest('hex').substring(0, 12)
+}
 
 export default async function () {
     let truthCSV = await Fetch(TRUTH_SOCIAL_URL, {
@@ -29,6 +36,7 @@ export default async function () {
                 link: d.Link,
                 content: d.Content,
                 tags: d.Tags !== '' ? d.Tags.split(/,\s?/g) : undefined,
+                hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
                 date
             }
         }).filter(d => d.content !== '')
@@ -56,11 +64,16 @@ export default async function () {
                 secondaryTarget: d['Secondary Target'],
                 link: d.Link,
                 content: d.Content,
+                hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
                 date
             }
         }).filter(d => d.content !== '')
 
+    // Deduplicate posts by hash and sort by date (newest first)
     const allPosts = [...twitterPosts, ...truthPosts]
+        .filter((post, index, self) => 
+            index === self.findIndex(p => p.hash === post.hash)
+        )
         .sort((a, b) => b.date - a.date)
 
     return allPosts

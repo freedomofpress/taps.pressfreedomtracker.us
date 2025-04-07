@@ -9,7 +9,7 @@
         <metadata-grid>
             <dt>Posted</dt>
             <dd>
-                <a class="original-link" :href="post.link">
+                <a class="permalink" :href="`post/${post.hash}/`">
                     <time
                         :datetime="post.dateString"
                         @text="post.date.toLocaleString('en-US', {
@@ -18,8 +18,8 @@
                             year: 'numeric'
                         })"
                     ></time>
-                    (<span @text="post.platform" webc:nokeep></span>)
                 </a>
+                (<a class="original-link" :href="post.link" @text="post.platform"></a>)
             </dd>
             <!---
             There is no <if> component and the tags are not rendered to HTML. I just named it here to make
@@ -128,7 +128,7 @@
         font-size: var(--font-size-base);
     }
 
-    .original-link {
+    .original-link, .permalink {
         color: var(--color-muted);
     }
 </style>

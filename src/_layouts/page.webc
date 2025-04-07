@@ -9,7 +9,7 @@
     </head>
     <body>
         <fpf-banner></fpf-banner>
-        <site-header :intro="$data.intro"></site-header>
+        <site-header :@intro="$data.intro"></site-header>
         <main>
             <div @raw="$data.content"></div>
         </main>
