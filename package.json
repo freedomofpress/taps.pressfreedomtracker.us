@@ -4,8 +4,8 @@
   "main": "",
   "type": "module",
   "scripts": {
-    "serve": "PROD=0 NODE_OPTIONS=\"--experimental-require-module\" eleventy --serve",
-    "build": "PROD=1 NODE_OPTIONS=\"--experimental-require-module\" eleventy"
+    "serve": "PROD=0 eleventy --serve",
+    "build": "PROD=1 eleventy"
   },
   "author": "",
   "license": "ISC",
