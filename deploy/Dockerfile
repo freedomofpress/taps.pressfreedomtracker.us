@@ -1,13 +1,12 @@
-# sha256 as of 2024-03-15
 FROM node:23.11.1-alpine3.21 AS eleventy-build
 
 WORKDIR /usr/src/page
 COPY package.json package-lock.json eleventy.config.js ./
 COPY src ./src
-RUN npm ci
-RUN npm run build
+RUN --mount=type=cache,target=/usr/src/page/node_modules,sharing=locked \
+    --mount=type=cache,target=/usr/src/page/.cache,sharing=locked \
+    npm ci && npm run build    
 
-# sha256 as of 2023-07-05
 FROM nginx:mainline-alpine
 
 COPY deploy/nginx.conf /etc/nginx
