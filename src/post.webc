@@ -1,11 +1,16 @@
+---js
+const layout = "page.webc"
+const pagination = {
+    data: "posts",
+    size: 1,
+    alias: "post"
+}
+const permalink = (data) => `post/${data.post.hash}/`
 ---
-layout: page.webc
-pagination:
-    data: posts
-    size: 1
-    alias: post
-eleventyComputed:
-    permalink: "post/<f @raw=\"post.hash\" webc:nokeep></f>/"
----
+
+<!---
+See discussion here for why JS frontmatter is required on this file
+https://github.com/11ty/eleventy/issues/3818
+--->
 
 <post-full :@post="$data.post" :@horizontal="true"></post-full>

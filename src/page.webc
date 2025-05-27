@@ -1,0 +1,29 @@
+---js
+const layout = "page.webc"
+const pagination = {
+    data: "posts",
+    size: 25,
+}
+const permalink = (data) => `page/${data.pagination.pageNumber + 1}/`
+---
+
+<!---
+See discussion here for why JS frontmatter is required on this file
+https://github.com/11ty/eleventy/issues/3818
+--->
+
+<post-full :@post="post" :@horizontal="true" webc:for="post of $data.pagination.items"></post-full>
+
+<div @raw="$data.pagination.page.last.pageNumber"></div>
+
+<a :href="$data.pagination.href.first" webc:if="$data.pagination.href.first !== $data.page.url">⇤</a>
+<span webc:if="$data.pagination.href.first === $data.page.url">⇤</span>
+
+<a :href="$data.pagination.href.previous" webc:if="$data.pagination.href.previous">←</a>
+<span webc:if="!$data.pagination.href.previous">←</span>
+
+<a :href="$data.pagination.href.next" webc:if="$data.pagination.href.next">→</a>
+<span webc:if="!$data.pagination.href.next">→</span>
+
+<a :href="$data.pagination.href.last" webc:if="$data.pagination.href.last !== $data.page.url">⇥</a>
+<span webc:if="$data.pagination.href.last === $data.page.url">⇥</span>

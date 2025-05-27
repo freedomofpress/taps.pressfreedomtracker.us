@@ -14,7 +14,8 @@ intro: true
     </div>
     <div slot="main">
         <h2>Full Archive</h2>
-        <post-list :@posts="$data.posts" slot="main"></post-list>
+        <post-list :@posts="$data.posts.slice(0, 25)" slot="main"></post-list>
+        <a href="/page/2/">Next Page</a>
     </div>
 </layout-sidebar>
 
