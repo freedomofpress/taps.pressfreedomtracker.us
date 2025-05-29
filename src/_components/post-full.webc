@@ -1,4 +1,7 @@
-<article :class="horizontal ? 'horizontal' : ''" webc:root="override">
+<article 
+    :class="horizontal ? 'horizontal' : ''" 
+    :data-hash="post.hash"
+    webc:root="override">
     <img class="avatar" src="/media/avatar.jpeg"></img>
     <div class="author">
         <div class="name">Donald J. Trump</div>

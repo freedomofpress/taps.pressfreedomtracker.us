@@ -1,4 +1,255 @@
-Javascript is required for filtering data.
-<template>
+<div class="filter-group">
+    <label>Search posts:</label>
+    <input type="text" class="filter-search" placeholder="Search content...">
+</div>
 
-</template>
+<div class="filter-group">
+    <label>Platform:</label>
+    <select class="filter-platform">
+        <option value="">All platforms</option>
+        <option value="Twitter">Twitter</option>
+        <option value="Truth Social">Truth Social</option>
+    </select>
+</div>
+
+<div class="filter-group">
+    <button type="button" class="filter-clear">× Clear all filters</button>
+</div>
+
+<script>
+    class PostFiltersElement extends HTMLElement {
+        constructor() {
+            super()
+            this.searchInput = null
+            this.platformSelect = null
+            this.clearButton = null
+            this.allPosts = []
+            this.filteredPosts = []
+            this.targetContainer = null
+        }
+        
+        connectedCallback() {
+            // Use requestAnimationFrame to ensure DOM is fully rendered
+            requestAnimationFrame(() => {
+                this.initializeElements()
+                this.loadPosts()
+            })
+        }
+        
+        async loadPosts() {
+            try {
+                const response = await fetch('/posts.json')
+                if (response.ok) {
+                    this.allPosts = await response.json()
+                    this.filteredPosts = [...this.allPosts]
+                    this.findTargetContainer()
+                    this.renderPosts()
+                }
+            } catch (error) {
+                console.error('Failed to load posts:', error)
+            }
+        }
+        
+        findTargetContainer() {
+            // Look for the container where posts should be rendered
+            // Try multiple possible selectors
+            this.targetContainer = 
+                document.querySelector('post-list') ||
+                document.querySelector('.post-list') ||
+                document.querySelector('[data-post-container]') ||
+                document.querySelector('main')
+            
+            if (!this.targetContainer) {
+                console.warn('Could not find target container for posts')
+            }
+        }
+        
+        initializeElements() {
+            this.searchInput = this.querySelector('.filter-search')
+            this.platformSelect = this.querySelector('.filter-platform')
+            this.clearButton = this.querySelector('.filter-clear')
+            
+            this.bindEvents()
+        }
+        
+        bindEvents() {
+            this.searchInput?.addEventListener('input', () => this.applyFilters())
+            this.platformSelect?.addEventListener('change', () => this.applyFilters())
+            this.clearButton?.addEventListener('click', () => this.clearFilters())
+        }
+        
+        applyFilters() {
+            const searchTerm = this.searchInput?.value.toLowerCase() || ''
+            const platform = this.platformSelect?.value || ''
+            
+            // Filter the data instead of DOM elements
+            this.filteredPosts = this.allPosts.filter(post => {
+                let visible = true
+                
+                // Text search
+                if (searchTerm) {
+                    const content = post.content?.toLowerCase() || ''
+                    if (!content.includes(searchTerm)) {
+                        visible = false
+                    }
+                }
+                
+                // Platform filter
+                if (platform && post.platform !== platform) {
+                    visible = false
+                }
+                
+                return visible
+            })
+            
+            // Re-render with filtered data
+            this.renderPosts()
+            
+            // Dispatch custom event for other components to listen to
+            this.dispatchEvent(new CustomEvent('filtersChanged', {
+                detail: { 
+                    searchTerm, 
+                    platform, 
+                    filteredCount: this.filteredPosts.length,
+                    totalCount: this.allPosts.length 
+                },
+                bubbles: true
+            }))
+        }
+        
+        renderPosts() {
+            if (!this.targetContainer) return
+            
+            // Clear existing posts
+            const existingPosts = this.targetContainer.querySelectorAll('article[data-hash]')
+            existingPosts.forEach(post => post.remove())
+            
+            // Render filtered posts
+            this.filteredPosts.forEach(post => {
+                const article = this.createPostElement(post)
+                this.targetContainer.appendChild(article)
+            })
+        }
+        
+        createPostElement(post) {
+            const article = document.createElement('article')
+            article.className = 'post-full'
+            article.setAttribute('data-hash', post.hash)
+            
+            const contentClass = this.getContentSizeClass(post.content)
+            
+            const dateObj = new Date(post.date)
+            const formattedDate = dateObj.toLocaleString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            })
+            
+            article.innerHTML = `
+                <img class="avatar" src="/media/avatar.jpeg">
+                <div class="author">
+                    <div class="name">Donald J. Trump</div>
+                    <div class="username">@realDonaldTrump</div>
+                </div>
+                <div class="content content--${contentClass}">${this.escapeHtml(post.content)}</div>
+                <div class="metadata">
+                    <dl class="metadata-grid">
+                        <dt>Posted</dt>
+                        <dd>
+                            <a class="permalink" href="post/${post.hash}/">
+                                <time datetime="${post.date}">${formattedDate}</time>
+                            </a>
+                            (<a class="original-link" href="${post.link}">${post.platform}</a>)
+                        </dd>
+                        ${post.primaryTarget ? `
+                            <dt>Target</dt>
+                            <dd>${this.escapeHtml(post.primaryTarget)}${post.secondaryTarget && post.secondaryTarget !== post.primaryTarget ? ` (${this.escapeHtml(post.secondaryTarget)})` : ''}</dd>
+                        ` : ''}
+                        ${post.tags ? `
+                            <dt>Tags</dt>
+                            <dd>${post.tags.map(tag => this.escapeHtml(tag)).join(', ')}</dd>
+                        ` : ''}
+                        ${post.type ? `
+                            <dt>Type</dt>
+                            <dd>${post.type.map(type => this.escapeHtml(type)).join(', ')}</dd>
+                        ` : ''}
+                    </dl>
+                </div>
+            `
+            
+            return article
+        }
+        
+        getContentSizeClass(text) {
+            if (text.length > 500) return 'long'
+            if (text.length > 200) return 'medium'
+            return 'short'
+        }
+        
+        escapeHtml(text) {
+            const div = document.createElement('div')
+            div.textContent = text
+            return div.innerHTML
+        }
+        
+        clearFilters() {
+            if (this.searchInput) this.searchInput.value = ''
+            if (this.platformSelect) this.platformSelect.value = ''
+            this.filteredPosts = [...this.allPosts]
+            this.renderPosts()
+            
+            // Dispatch event
+            this.dispatchEvent(new CustomEvent('filtersChanged', {
+                detail: { 
+                    searchTerm: '', 
+                    platform: '',
+                    filteredCount: this.filteredPosts.length,
+                    totalCount: this.allPosts.length 
+                },
+                bubbles: true
+            }))
+        }
+    }
+
+    // Register the custom element
+    customElements.define('post-filters', PostFiltersElement)
+</script>
+
+<style webc:scoped="post-filters">
+    :host {
+        margin-bottom: var(--line-height-base);
+    }
+    
+    .filter-group {
+        margin-bottom: var(--line-height-base);
+    }
+    
+    .filter-group label {
+        display: block;
+        font-size: var(--font-size-base);
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .filter-group input,
+    .filter-group select {
+        display: block;
+        font-size: var(--font-size-base);
+        padding: 0.5rem;
+        border: 1px solid var(--color-border);
+    }
+    
+    .filter-group button {
+        font-size: var(--font-size-base);
+        padding: 0.5rem 1rem;
+        background: transparent;
+        color: var(--color-muted);
+        border: 1px solid var(--color-border);
+        cursor: pointer;
+    }
+    
+    .filter-group button:hover {
+        color: var(--color-base);
+        border-color: var(--color-muted);
+    }
+</style>
