@@ -26,8 +26,12 @@
             this.allPosts = []
             this.filteredPosts = []
             this.targetContainer = null
+            this.showMoreButton = null
+            this.showAllButton = null
+            this.postsPerPage = 25
+            this.currentPage = 1
         }
-        
+
         connectedCallback() {
             // Use requestAnimationFrame to ensure DOM is fully rendered
             requestAnimationFrame(() => {
@@ -35,7 +39,7 @@
                 this.loadPosts()
             })
         }
-        
+
         async loadPosts() {
             try {
                 const response = await fetch('/posts.json')
@@ -49,43 +53,88 @@
                 console.error('Failed to load posts:', error)
             }
         }
-        
+
         findTargetContainer() {
             // Look for the container where posts should be rendered
             // Try multiple possible selectors
-            this.targetContainer = 
+            this.targetContainer =
                 document.querySelector('post-list') ||
                 document.querySelector('.post-list') ||
                 document.querySelector('[data-post-container]') ||
                 document.querySelector('main')
-            
+
             if (!this.targetContainer) {
                 console.warn('Could not find target container for posts')
+            } else {
+                this.createShowMoreButton()
+                this.hidePaginationLink()
             }
         }
-        
+
+        hidePaginationLink() {
+            // Hide the static pagination link when JS is running
+            const paginationLink = document.querySelector('#pagination-link')
+            if (paginationLink) {
+                paginationLink.style.display = 'none'
+            }
+        }
+
+        createShowMoreButton() {
+            this.showMoreButton = document.createElement('button')
+            this.showMoreButton.type = 'button'
+            this.showMoreButton.className = 'show-more-button'
+            this.showMoreButton.textContent = 'Show more posts'
+            this.showMoreButton.style.cssText = `
+                font-size: var(--font-size-base);
+                padding: 0.75rem 1.5rem;
+                margin: var(--line-height-base) 0.5rem var(--line-height-base) 0;
+                background: transparent;
+                color: var(--color-base);
+                border: 1px solid var(--color-border);
+                cursor: pointer;
+                display: inline-block;
+            `
+            this.showMoreButton.addEventListener('click', () => this.showMorePosts())
+
+            this.showAllButton = document.createElement('button')
+            this.showAllButton.type = 'button'
+            this.showAllButton.className = 'show-all-button'
+            this.showAllButton.textContent = 'Show all posts'
+            this.showAllButton.style.cssText = `
+                font-size: var(--font-size-base);
+                padding: 0.75rem 1.5rem;
+                margin: var(--line-height-base) 0;
+                background: transparent;
+                color: var(--color-muted);
+                border: 1px solid var(--color-border);
+                cursor: pointer;
+                display: inline-block;
+            `
+            this.showAllButton.addEventListener('click', () => this.showAllPosts())
+        }
+
         initializeElements() {
             this.searchInput = this.querySelector('.filter-search')
             this.platformSelect = this.querySelector('.filter-platform')
             this.clearButton = this.querySelector('.filter-clear')
-            
+
             this.bindEvents()
         }
-        
+
         bindEvents() {
             this.searchInput?.addEventListener('input', () => this.applyFilters())
             this.platformSelect?.addEventListener('change', () => this.applyFilters())
             this.clearButton?.addEventListener('click', () => this.clearFilters())
         }
-        
+
         applyFilters() {
             const searchTerm = this.searchInput?.value.toLowerCase() || ''
             const platform = this.platformSelect?.value || ''
-            
+
             // Filter the data instead of DOM elements
             this.filteredPosts = this.allPosts.filter(post => {
                 let visible = true
-                
+
                 // Text search
                 if (searchTerm) {
                     const content = post.content?.toLowerCase() || ''
@@ -93,58 +142,112 @@
                         visible = false
                     }
                 }
-                
+
                 // Platform filter
                 if (platform && post.platform !== platform) {
                     visible = false
                 }
-                
+
                 return visible
             })
-            
+
+            // Reset pagination when filters change
+            this.currentPage = 1
+
             // Re-render with filtered data
             this.renderPosts()
-            
+
             // Dispatch custom event for other components to listen to
             this.dispatchEvent(new CustomEvent('filtersChanged', {
-                detail: { 
-                    searchTerm, 
-                    platform, 
+                detail: {
+                    searchTerm,
+                    platform,
                     filteredCount: this.filteredPosts.length,
-                    totalCount: this.allPosts.length 
+                    totalCount: this.allPosts.length
                 },
                 bubbles: true
             }))
         }
-        
+
         renderPosts() {
             if (!this.targetContainer) return
-            
-            // Clear existing posts
+
+            // Clear existing posts and pagination buttons
             const existingPosts = this.targetContainer.querySelectorAll('article[data-hash]')
             existingPosts.forEach(post => post.remove())
-            
-            // Render filtered posts
-            this.filteredPosts.forEach(post => {
+
+            const existingShowMore = this.targetContainer.querySelector('.show-more-button')
+            if (existingShowMore) {
+                existingShowMore.remove()
+            }
+
+            const existingShowAll = this.targetContainer.querySelector('.show-all-button')
+            if (existingShowAll) {
+                existingShowAll.remove()
+            }
+
+            // Calculate posts to show
+            const postsToShow = this.filteredPosts.slice(0, this.currentPage * this.postsPerPage)
+
+            // Render visible posts
+            postsToShow.forEach(post => {
                 const article = this.createPostElement(post)
                 this.targetContainer.appendChild(article)
             })
+
+            // Add pagination buttons if there are more posts to show
+            if (postsToShow.length < this.filteredPosts.length) {
+                const remaining = this.filteredPosts.length - postsToShow.length
+                const nextBatch = Math.min(this.postsPerPage, remaining)
+
+                // Create a container for the buttons
+                const buttonContainer = document.createElement('div')
+                buttonContainer.style.cssText = `
+                    text-align: center;
+                    margin: var(--line-height-base) 0;
+                `
+
+                // Update button text
+                this.showMoreButton.textContent = `Show ${nextBatch} more posts`
+                this.showAllButton.textContent = `Show all ${remaining} posts`
+
+                // Add the "Show more" button
+                buttonContainer.appendChild(this.showMoreButton)
+
+                // Add the "Show all" button only if there's more than one additional page
+                if (remaining > this.postsPerPage) {
+                    buttonContainer.appendChild(this.showAllButton)
+                }
+
+                this.targetContainer.appendChild(buttonContainer)
+            }
         }
-        
+
+        showMorePosts() {
+            this.currentPage++
+            this.renderPosts()
+        }
+
+        showAllPosts() {
+            // Calculate how many pages needed to show all posts
+            this.currentPage = Math.ceil(this.filteredPosts.length / this.postsPerPage)
+            this.renderPosts()
+        }
+
         createPostElement(post) {
             const article = document.createElement('article')
             article.className = 'post-full'
             article.setAttribute('data-hash', post.hash)
-            
+
             const contentClass = this.getContentSizeClass(post.content)
-            
+
             const dateObj = new Date(post.date)
             const formattedDate = dateObj.toLocaleString('en-US', {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric'
             })
-            
+
             article.innerHTML = `
                 <img class="avatar" src="/media/avatar.jpeg">
                 <div class="author">
@@ -176,35 +279,36 @@
                     </dl>
                 </div>
             `
-            
+
             return article
         }
-        
+
         getContentSizeClass(text) {
             if (text.length > 500) return 'long'
             if (text.length > 200) return 'medium'
             return 'short'
         }
-        
+
         escapeHtml(text) {
             const div = document.createElement('div')
             div.textContent = text
             return div.innerHTML
         }
-        
+
         clearFilters() {
             if (this.searchInput) this.searchInput.value = ''
             if (this.platformSelect) this.platformSelect.value = ''
             this.filteredPosts = [...this.allPosts]
+            this.currentPage = 1  // Reset pagination
             this.renderPosts()
-            
+
             // Dispatch event
             this.dispatchEvent(new CustomEvent('filtersChanged', {
-                detail: { 
-                    searchTerm: '', 
+                detail: {
+                    searchTerm: '',
                     platform: '',
                     filteredCount: this.filteredPosts.length,
-                    totalCount: this.allPosts.length 
+                    totalCount: this.allPosts.length
                 },
                 bubbles: true
             }))
@@ -219,18 +323,18 @@
     :host {
         margin-bottom: var(--line-height-base);
     }
-    
+
     .filter-group {
         margin-bottom: var(--line-height-base);
     }
-    
+
     .filter-group label {
         display: block;
         font-size: var(--font-size-base);
         font-weight: bold;
         margin-bottom: 0.5rem;
     }
-    
+
     .filter-group input,
     .filter-group select {
         display: block;
@@ -238,7 +342,7 @@
         padding: 0.5rem;
         border: 1px solid var(--color-border);
     }
-    
+
     .filter-group button {
         font-size: var(--font-size-base);
         padding: 0.5rem 1rem;
@@ -247,7 +351,7 @@
         border: 1px solid var(--color-border);
         cursor: pointer;
     }
-    
+
     .filter-group button:hover {
         color: var(--color-base);
         border-color: var(--color-muted);
