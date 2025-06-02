@@ -3,9 +3,7 @@ FROM node:23.11.1-alpine3.21 AS eleventy-build
 WORKDIR /usr/src/page
 COPY package.json package-lock.json eleventy.config.js ./
 COPY src ./src
-RUN --mount=type=cache,target=/usr/src/page/node_modules,sharing=locked \
-    --mount=type=cache,target=/usr/src/page/.cache,sharing=locked \
-    npm ci && npm run build    
+RUN npm ci && npm run build
 
 FROM nginx:mainline-alpine
 
