@@ -1,5 +1,5 @@
-<article 
-    :class="horizontal ? 'horizontal' : ''" 
+<article
+    :class="horizontal ? 'horizontal' : ''"
     :data-hash="post.hash"
     webc:root="override">
     <img class="avatar" src="/media/avatar.jpeg"></img>
@@ -41,13 +41,13 @@
             <if webc:nokeep webc:if="post.tags">
                 <dt>Tags</dt>
                 <dd>
-                    <span @text="post.tags.join(', ')" webc:nokeep></span>
+                    <post-tag :@name="tag" webc:for="tag of post.tags"></post-tag>
                 </dd>
             </if>
             <if webc:nokeep webc:if="post.type">
                 <dt>Type</dt>
                 <dd>
-                    <span @text="post.type.join(', ')" webc:nokeep></span>
+                    <post-type :@name="type" webc:for="type of post.type"></post-type>
                 </dd>
             </if>
         </metadata-grid>

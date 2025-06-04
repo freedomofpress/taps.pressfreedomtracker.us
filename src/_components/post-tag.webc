@@ -1,0 +1,23 @@
+<a webc:root="override" @raw="name" href="#"></a>
+
+<style webc:scoped="post-tag">
+    :host {
+        display: inline-block;
+        background-color: var(--color-pft-yellow-light);
+        padding: 0.2rem 0.4rem;
+        margin-left: 0.4rem;
+        margin-bottom: 0.3rem;
+        text-decoration: none;
+        color: var(--color-base);
+    }
+
+    :host::before {
+        content: "#";
+        color: var(--color-muted-more);
+        margin-right: 0.5ch;
+    }
+
+    :host:hover {
+        background-color: var(--color-pft-yellow);
+    }
+</style>

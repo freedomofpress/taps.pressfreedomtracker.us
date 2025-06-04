@@ -26,10 +26,12 @@
         --font-family-sans: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif;
         --color-base: #333;
         --color-muted: #666;
+        --color-muted-more: #999;
         --color-border: #ddd;
         --color-background: #fff;
         --color-background-accent: #f8f8f8;
         --color-pft-yellow: #f2fc67;
+        --color-pft-yellow-light: #fafec2;
         font-size: 10px;
         margin: 0;
         padding: 0;

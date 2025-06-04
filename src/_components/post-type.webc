@@ -1,0 +1,21 @@
+<a webc:root="override" @raw="name" href="#"></a>
+
+<style webc:scoped="post-type">
+    :host {
+        --padding-x: 0.6rem;
+        --padding-y: 0.2rem;
+        display: inline-block;
+        padding: var(--padding-y) var(--padding-x);
+        margin-left: 0.4rem;
+        margin-bottom: 0.3rem;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: calc(var(--line-height-base) / 2 + var(--padding-y));
+        text-decoration: none;
+        color: var(--color-base);
+    }
+
+    :host:hover {
+        background-color: var(--color-border);
+    }
+</style>
