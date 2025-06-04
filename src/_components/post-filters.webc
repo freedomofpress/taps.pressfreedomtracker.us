@@ -16,7 +16,14 @@
     <button type="button" class="filter-clear">× Clear all filters</button>
 </div>
 
+<post-full-template></post-full-template>
+
 <script>
+    const newNode = (html_str) => new DOMParser()
+        .parseFromString(html_str, "text/html")
+        .body
+        .firstElementChild
+
     class PostFiltersElement extends HTMLElement {
         constructor() {
             super()
@@ -30,14 +37,22 @@
             this.showAllButton = null
             this.postsPerPage = 25
             this.currentPage = 1
+            this.templates = {}
         }
 
         connectedCallback() {
             // Use requestAnimationFrame to ensure DOM is fully rendered
             requestAnimationFrame(() => {
+                this.getTemplates()
                 this.initializeElements()
                 this.loadPosts()
             })
+        }
+
+        getTemplates() {
+            this.templates.post = this.querySelector('template[data-post-template]').innerHTML
+            this.templates.tag = this.querySelector('template[data-tag-template]').innerHTML
+            this.templates.type = this.querySelector('template[data-type-template]').innerHTML
         }
 
         async loadPosts() {
@@ -235,52 +250,54 @@
         }
 
         createPostElement(post) {
-            const article = document.createElement('article')
-            article.className = 'post-full'
-            article.setAttribute('data-hash', post.hash)
+            // Fill out the values of the template string
+            // kinda like a lightweight template language
+            const postString = Object.entries(post).reduce(
+                (str, [key, value]) => str.replaceAll(`{{ ${key} }}`, value),
+                this.templates.post
+            )
+            const postEl = newNode(postString)
 
-            const contentClass = this.getContentSizeClass(post.content)
+            // A few bits require special handling
+            // -----------------------------------
 
+            // Replace date with formatted date
             const dateObj = new Date(post.date)
             const formattedDate = dateObj.toLocaleString('en-US', {
                 month: 'long',
                 day: 'numeric',
                 year: 'numeric'
             })
+            postEl.querySelector('[data-date]').textContent = formattedDate
 
-            article.innerHTML = `
-                <img class="avatar" src="/media/avatar.jpeg">
-                <div class="author">
-                    <div class="name">Donald J. Trump</div>
-                    <div class="username">@realDonaldTrump</div>
-                </div>
-                <div class="content content--${contentClass}">${this.escapeHtml(post.content)}</div>
-                <div class="metadata">
-                    <dl class="metadata-grid">
-                        <dt>Posted</dt>
-                        <dd>
-                            <a class="permalink" href="post/${post.hash}/">
-                                <time datetime="${post.date}">${formattedDate}</time>
-                            </a>
-                            (<a class="original-link" href="${post.link}">${post.platform}</a>)
-                        </dd>
-                        ${post.primaryTarget ? `
-                            <dt>Target</dt>
-                            <dd>${this.escapeHtml(post.primaryTarget)}${post.secondaryTarget && post.secondaryTarget !== post.primaryTarget ? ` (${this.escapeHtml(post.secondaryTarget)})` : ''}</dd>
-                        ` : ''}
-                        ${post.tags ? `
-                            <dt>Tags</dt>
-                            <dd>${post.tags.map(tag => this.escapeHtml(tag)).join(', ')}</dd>
-                        ` : ''}
-                        ${post.type ? `
-                            <dt>Type</dt>
-                            <dd>${post.type.map(type => this.escapeHtml(type)).join(', ')}</dd>
-                        ` : ''}
-                    </dl>
-                </div>
-            `
+            // Replace tags with actual tag elements
+            const tagsContainer = postEl.querySelector('[data-tags]')
+            const tagNodes = post?.tags?.map(
+                tag => newNode(this.templates.tag.replaceAll("{{ tag }}", tag))
+            )
+            tagsContainer.innerHTML = '' // Clear existing content
+            tagNodes?.forEach(tagNode => tagsContainer.appendChild(tagNode))
 
-            return article
+            // Replace types with actual type elements
+            const typesContainer = postEl.querySelector('[data-types]')
+            const typeNodes = post?.type?.map(
+                type => newNode(this.templates.type.replaceAll("{{ type }}", type))
+            )
+            typesContainer.innerHTML = '' // Clear existing content
+            typeNodes?.forEach(typeNode => typesContainer.appendChild(typeNode))
+
+            // Replace targets with appropriate formatting
+            const targetsContainer = postEl.querySelector('[data-targets]')
+            if (post.secondaryTarget && post.primaryTarget !== post.secondaryTarget) {
+                targetsContainer.innerHTML = `
+                    <span>${this.escapeHtml(post.primaryTarget)}</span>
+                    (<span>${this.escapeHtml(post.secondaryTarget)}</span>)
+                `
+            } else {
+                targetsContainer.innerHTML = `<span>${this.escapeHtml(post.primaryTarget)}</span>`
+            }
+
+            return postEl
         }
 
         getContentSizeClass(text) {

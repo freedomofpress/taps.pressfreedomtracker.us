@@ -37,7 +37,8 @@ export default async function () {
                 content: d.Content,
                 tags: d.Tags !== '' ? d.Tags.split(/,\s?/g) : undefined,
                 hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
-                date
+                date,
+                dateString
             }
         }).filter(d => d.content !== '')
 
@@ -65,13 +66,14 @@ export default async function () {
                 link: d.Link,
                 content: d.Content,
                 hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
-                date
+                date,
+                dateString
             }
         }).filter(d => d.content !== '')
 
     // Deduplicate posts by hash and sort by date (newest first)
     const allPosts = [...twitterPosts, ...truthPosts]
-        .filter((post, index, self) => 
+        .filter((post, index, self) =>
             index === self.findIndex(p => p.hash === post.hash)
         )
         .sort((a, b) => b.date - a.date)

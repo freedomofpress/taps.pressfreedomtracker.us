@@ -22,6 +22,3 @@ intro: true
         <a href="/page/2/" id="pagination-link">Next Page</a>
     </div>
 </layout-sidebar>
-
-<script webc:setup>
-</script>

@@ -1,21 +1,30 @@
+<!---
+For some reason I don't understand, post will sometimes be undefined
+if I don't reiterate it here
+
+Also for some reason if I try to get rid of the outer element with webc:root="override"
+similar things happen
+--->
 <article
+    @post="post"
     :class="horizontal ? 'horizontal' : ''"
     :data-hash="post.hash"
-    webc:root="override">
+>
     <img class="avatar" src="/media/avatar.jpeg"></img>
     <div class="author">
         <div class="name">Donald J. Trump</div>
         <div class="username">@realDonaldTrump</div>
     </div>
-    <div :class="`content content--${postSize(post.content)}`" @text="post.content"></div>
+    <div @post="post" :class="`content content--${postSize(post.content)}`" @text="post.content"></div>
     <div class="metadata">
-        <metadata-grid>
+        <metadata-grid :@post="post">
             <dt>Posted</dt>
             <dd>
                 <a class="permalink" :href="`post/${post.hash}/`">
                     <time
+                        data-date
                         :datetime="post.dateString"
-                        @text="post.date.toLocaleString('en-US', {
+                        @text="post.date?.toLocaleString('en-US', {
                             month: 'long',
                             day: 'numeric',
                             year: 'numeric'
@@ -30,23 +39,23 @@
             --->
             <if webc:nokeep webc:if="post.primaryTarget">
                 <dt>Target</dt>
-                <dd webc:if="post.secondaryTarget && (post.primaryTarget !== post.secondaryTarget)">
+                <dd data-targets webc:if="post.secondaryTarget && (post.primaryTarget !== post.secondaryTarget)">
                     <span @text="post.primaryTarget" webc:nokeep></span>
                     (<span @text="post.secondaryTarget" webc:nokeep></span>)
                 </dd>
-                <dd webc:if="!post.secondaryTarget || (post.primaryTarget === post.secondaryTarget)">
+                <dd data-targets webc:if="!post.secondaryTarget || (post.primaryTarget === post.secondaryTarget)">
                     <span @text="post.primaryTarget" webc:nokeep></span>
                 </dd>
             </if>
             <if webc:nokeep webc:if="post.tags">
                 <dt>Tags</dt>
-                <dd>
+                <dd data-tags>
                     <post-tag :@name="tag" webc:for="tag of post.tags"></post-tag>
                 </dd>
             </if>
             <if webc:nokeep webc:if="post.type">
                 <dt>Type</dt>
-                <dd>
+                <dd data-types>
                     <post-type :@name="type" webc:for="type of post.type"></post-type>
                 </dd>
             </if>
@@ -63,7 +72,7 @@
 </script>
 
 <style webc:scoped="post-full">
-    :host {
+    article {
         --avatar-size: 60px;
         --padding: var(--line-height-base);
         --metadata-width: 50%;
@@ -82,7 +91,7 @@
     }
 
     /* Alternative Layout */
-    :host.horizontal {
+    article.horizontal {
         grid-template-columns: calc(var(--avatar-size) + var(--padding)) auto calc(var(--metadata-width) - var(--padding));
         grid-template-areas:
             "avatar author metadata"
