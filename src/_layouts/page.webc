@@ -20,9 +20,6 @@
     :root {
         --page-max-width: 128rem;
         --page-padding-x: 4rem;
-        --font-size-base: 1.6rem;
-        --line-height-multiplier: 1.25;
-        --line-height-base: calc(var(--font-size-base) * var(--line-height-multiplier));
         --font-family-sans: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif;
         --color-base: #333;
         --color-muted: #666;
@@ -32,6 +29,15 @@
         --color-background-accent: #f8f8f8;
         --color-pft-yellow: #f2fc67;
         --color-pft-yellow-light: #fafec2;
+
+        /* Fluid typography */
+        --font-size-base: clamp(1.6rem, 2vw, 2rem);
+        --font-size-h1: clamp(2 * var(--font-size-base), 6vw, 9.6rem); /* the heading needs a slightly steeper scale */
+
+        /* Vertical rhythm */
+        --line-height-multiplier: 1.25;
+        --line-height-base: calc(var(--font-size-base) * var(--line-height-multiplier));
+
         font-size: 10px;
         margin: 0;
         padding: 0;

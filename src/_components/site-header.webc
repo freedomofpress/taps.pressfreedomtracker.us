@@ -3,7 +3,7 @@
     <if webc:if="intro" webc:nokeep>
         <p class="p1">When it comes to combative relationships between presidents and the press, Donald Trump’s social media use sets him apart.</p>
         <p>To document this, we have cataloged every post on social media – first on Twitter, now X, and later on Truth Social – in which he degraded journalists, news outlets or the news media as a whole, dating back to June 16, 2015, when he descended the escalator in his eponymous tower in New York City.</p>
-        <p><a href="https://pressfreedomtracker.us/blog/all-the-presidents-invective/">Read more about the project &rarr;</a></p>    
+        <p><a href="https://pressfreedomtracker.us/blog/all-the-presidents-invective/">Read more about the project &rarr;</a></p>
     </if>
     <p webc:if="!intro"><a href="/">&larr; Home</a></p>
 </header>
@@ -17,7 +17,7 @@
     }
 
     h1 {
-        font-size: calc(6 * var(--font-size-base));
+        font-size: var(--font-size-h1);
         font-weight: normal;
         margin: 0;
     }
@@ -27,11 +27,11 @@
     }
 
     p {
-        font-size: calc(1.5 * var(--font-size-base));
+        font-size: max(var(--font-size-base), calc(0.33 * var(--font-size-h1)));
         max-width: 80rem;
     }
 
     .p1 {
-        font-size: calc(2 * var(--font-size-base));
+        font-size: max(var(--font-size-base), calc(0.5 * var(--font-size-h1)));
     }
 </style>
