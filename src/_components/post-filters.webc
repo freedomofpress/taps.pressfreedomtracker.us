@@ -16,8 +16,6 @@
     <button type="button" class="filter-clear">× Clear all filters</button>
 </div>
 
-<post-full-template></post-full-template>
-
 <script>
     const newNode = (html_str) => new DOMParser()
         .parseFromString(html_str, "text/html")
