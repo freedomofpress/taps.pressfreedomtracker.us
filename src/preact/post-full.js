@@ -20,7 +20,7 @@ const PostFull = ({ post, horizontal }) => {
   })
 
   return html`
-    <article class="post" data-hash=${post.hash} data-horizontal=${horizontal}>
+    <article class="post-full ${horizontal ? 'horizontal' : ''}" data-hash=${post.hash}>
       <img class="post-avatar" src="/media/avatar.jpeg" alt="Avatar" />
       <div class="post-author">
         <div class="post-author-name">Donald J. Trump</div>
