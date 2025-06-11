@@ -1,15 +1,23 @@
 import { html } from 'htm/preact'
 import { useState, useEffect } from 'preact/hooks'
 
-const PostFilters = ({ onFiltersChange, posts = [] }) => {
-    const [searchTerm, setSearchTerm] = useState('')
-    const [platform, setPlatform] = useState('')
-    const [selectedTag, setSelectedTag] = useState('')
-    const [selectedType, setSelectedType] = useState('')
+const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
+    const [searchTerm, setSearchTerm] = useState(initialFilters.searchTerm || '')
+    const [platform, setPlatform] = useState(initialFilters.platform || '')
+    const [selectedTag, setSelectedTag] = useState(initialFilters.selectedTag || '')
+    const [selectedType, setSelectedType] = useState(initialFilters.selectedType || '')
 
     // Extract unique tags and types from posts
-    const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []))].sort()
-    const uniqueTypes = [...new Set(posts.flatMap(post => post.type || []))].sort()
+    const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []).filter(tag => tag && tag.trim()))].sort()
+    const uniqueTypes = [...new Set(posts.flatMap(post => post.type || []).filter(type => type && type.trim()))].sort()
+
+    // Update state when initialFilters change (for browser back/forward)
+    useEffect(() => {
+        setSearchTerm(initialFilters.searchTerm || '')
+        setPlatform(initialFilters.platform || '')
+        setSelectedTag(initialFilters.selectedTag || '')
+        setSelectedType(initialFilters.selectedType || '')
+    }, [initialFilters.searchTerm, initialFilters.platform, initialFilters.selectedTag, initialFilters.selectedType])
 
     const updateFilters = (newFilters) => {
         onFiltersChange({

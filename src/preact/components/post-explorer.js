@@ -1,14 +1,84 @@
 import { html } from 'htm/preact'
-import { useState, useEffect } from 'preact/hooks'
+import { useState, useEffect, useRef } from 'preact/hooks'
 import PostList from './post-list.js'
 import PostFilters from './post-filters.js'
+
+// Utility functions moved outside component to avoid redefinition on each render
+const getFiltersFromURL = () => {
+    if (typeof window === 'undefined') return {}
+
+    const urlParams = new URLSearchParams(window.location.search)
+    return {
+        searchTerm: urlParams.get('search') || '',
+        platform: urlParams.get('platform') || '',
+        selectedTag: urlParams.get('tag') || '',
+        selectedType: urlParams.get('type') || ''
+    }
+}
+
+const hasActiveFiltersInURL = () => {
+    if (typeof window === 'undefined') return false
+
+    const urlParams = new URLSearchParams(window.location.search)
+    return urlParams.has('search') || urlParams.has('platform') || urlParams.has('tag') || urlParams.has('type')
+}
+
+const updateURLWithFilters = (filters) => {
+    if (typeof window === 'undefined') return
+
+    const urlParams = new URLSearchParams()
+
+    if (filters.searchTerm) urlParams.set('search', filters.searchTerm)
+    if (filters.platform) urlParams.set('platform', filters.platform)
+    if (filters.selectedTag) urlParams.set('tag', filters.selectedTag)
+    if (filters.selectedType) urlParams.set('type', filters.selectedType)
+
+    const newURL = urlParams.toString() ?
+        `${window.location.pathname}?${urlParams.toString()}` :
+        window.location.pathname
+
+    window.history.pushState({}, '', newURL)
+}
 
 const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
     const [isClient, setIsClient] = useState(false)
     const [postStartIndex, setPostStartIndex] = useState(initialRange[0])
     const [postEndIndex, setPostEndIndex] = useState(initialRange[1])
-    const [filters, setFilters] = useState({})
+    const [filters, setFilters] = useState(getFiltersFromURL())
     const [filteredPosts, setFilteredPosts] = useState(posts)
+    const explorerRef = useRef(null)
+
+    // Handle filter changes
+    const handleFiltersChange = (newFilters) => {
+        setFilters(newFilters)
+        updateURLWithFilters(newFilters)
+    }
+
+    // Handle browser back/forward navigation
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+
+        const handlePopState = () => {
+            const newFilters = getFiltersFromURL()
+            setFilters(newFilters)
+        }
+
+        window.addEventListener('popstate', handlePopState)
+        return () => window.removeEventListener('popstate', handlePopState)
+    }, [])
+
+    // Auto-scroll to explorer if there are active filters in URL
+    useEffect(() => {
+        if (isClient && hasActiveFiltersInURL() && explorerRef.current) {
+            // Small delay to ensure the component is fully rendered
+            setTimeout(() => {
+                explorerRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                })
+            }, 100)
+        }
+    }, [isClient])
 
     useEffect(() => {
         // When filters are updated, reset post indices
@@ -58,10 +128,10 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
     const hasMorePosts = postEndIndex < posts.length
 
     return html`
-        <div class="post-explorer">
+        <div class="post-explorer" ref=${explorerRef}>
             <h2>Full Archive</h2>
             <div class="filters-wrapper">
-                <${PostFilters} onFiltersChange=${setFilters} posts=${posts} />
+                <${PostFilters} onFiltersChange=${handleFiltersChange} posts=${posts} initialFilters=${filters} />
             </div>
             <div class="main">
                 <${PostList} posts=${filteredPosts.slice(postStartIndex, postEndIndex)} />
