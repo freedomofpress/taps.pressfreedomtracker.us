@@ -25,8 +25,16 @@ const PostFull = ({ post, horizontal }) => {
         <div class="post-author-name">Donald J. Trump</div>
         <div class="post-author-handle">@realDonaldTrump</div>
       </div>
-      <div class="post-content" data-size=${getContentSizeClass(post.content)}>
-        ${post.content}
+      <div class="post-body">
+        <div class="post-content post-content-${getContentSizeClass(post.content)}">
+            ${post.content}
+        </div>
+        ${!!post.mediaDescription.trim() && html`
+            <dl class="post-media-description">
+                <dt>Media Description</dt>
+                <dd>${post.mediaDescription}</dd>
+            </dl>
+        `}
       </div>
       <div class="post-metadata">
         <${MetadataGrid}>
