@@ -35,4 +35,13 @@
     .p1 {
         font-size: max(var(--font-size-base), calc(0.5 * var(--font-size-h1)));
     }
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    a:hover {
+        background-color: var(--color-pft-yellow);
+    }
 </style>

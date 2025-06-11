@@ -77,6 +77,15 @@
         max-width: 100%;
     }
 
+    .post-body a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    .post-body a:hover {
+        background-color: var(--color-pft-yellow);
+    }
+
     .post-content {
         max-width: 100%;
         overflow-x: auto;
@@ -95,14 +104,18 @@
     }
 
     .post-link {
-        color: var(--color-muted);
-        text-decoration: none;
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    .post-link:hover {
+        background-color: var(--color-pft-yellow);
     }
 
     /* Metadata Grid Styles */
     .metadata-grid {
         display: grid;
-        grid-template-columns: 0.3fr 1fr;
+        grid-template-columns: minmax(0,0.5fr) minmax(0, 1fr);
         margin: 0;
         padding: 0;
     }
@@ -125,25 +138,37 @@
     }
 
     /* Post Tag Styles */
-    .post-tag {
+    .post-tag, .post-type {
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    .post-tag-link, .post-type-link {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .post-tag-link {
         display: inline-block;
         font-size: 0.8em;
         line-height: calc(var(--line-height-base) - 0.2rem);
         padding: 0 calc(var(--line-height-base) / 4);
         margin-left: 0.4rem;
-        margin-bottom: calc(0.25 * var(--line-height-base));
         background: var(--color-pft-yellow-light);
         text-decoration: none;
         color: var(--color-base);
     }
 
-    .post-tag::before {
+    .post-tag-link::before {
         content: "#";
         color: var(--color-muted-more);
         margin-right: 0.5ch;
     }
 
-    .post-tag:hover {
+    .post-tag-link:hover {
         background-color: var(--color-pft-yellow);
     }
 
@@ -153,21 +178,20 @@
     }
 
     /* Post Type Styles */
-    .post-type {
+    .post-type-link {
         display: inline-block;
         font-size: 0.8em;
         line-height: calc(var(--line-height-base) - 0.2rem);
         border: 0.1rem solid var(--color-border);
         padding: 0 calc(var(--line-height-base) / 2);
         margin-left: 0.4rem;
-        margin-bottom: calc(0.25 * var(--line-height-base));
         background: var(--color-background);
         border-radius: calc(var(--line-height-base) / 2);
         text-decoration: none;
         color: var(--color-base);
     }
 
-    .post-type:hover {
+    .post-type-link:hover {
         background-color: var(--color-background-accent);
     }
 
