@@ -77,6 +77,15 @@
         max-width: 100%;
     }
 
+    .post-body a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    .post-body a:hover {
+        background-color: var(--color-pft-yellow);
+    }
+
     .post-content {
         max-width: 100%;
         overflow-x: auto;
