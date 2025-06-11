@@ -6,6 +6,6 @@ export default class PostsJSON {
     }
 
     render({ posts }) {
-        return JSON.stringify(posts.sort((a, b) => a.i - b.i))
+        return JSON.stringify(posts)
     }
 }

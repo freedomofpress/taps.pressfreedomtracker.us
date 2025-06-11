@@ -3,20 +3,19 @@ import { useState, useEffect } from 'preact/hooks'
 import PostList from './post-list.js'
 import PostFilters from './post-filters.js'
 
-const PostExplorer = ({ posts }) => {
-    const postsPerPage = 25
+const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
     const [isClient, setIsClient] = useState(false)
-    const [postStartIndex, setPostStartIndex] = useState(3)
-    const [postEndIndex, setPostEndIndex] = useState(postsPerPage)
+    const [postStartIndex, setPostStartIndex] = useState(initialRange[0])
+    const [postEndIndex, setPostEndIndex] = useState(initialRange[1])
     const [filters, setFilters] = useState({})
     const [filteredPosts, setFilteredPosts] = useState(posts)
 
     useEffect(() => {
         // When filters are updated, reset post indices
         if (!filters.platform && !filters.searchTerm) {
-            setPostStartIndex(3)
+            setPostStartIndex(initialRange[0])
         } else {
-            setPostStartIndex(0)
+            setPostStartIndex(initialRange[1])
         }
         setPostEndIndex(postsPerPage)
 

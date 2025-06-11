@@ -8,4 +8,4 @@ intro: true
 
 <post-grid :@posts="$data.posts.slice(0, 3)"></post-grid>
 
-<post-explorer :@posts="$data.posts.slice(3)"></post-explorer>
+<post-explorer :@posts="$data.posts"></post-explorer>

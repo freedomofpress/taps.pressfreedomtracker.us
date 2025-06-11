@@ -46,13 +46,13 @@ const PostFull = ({ post, horizontal }) => {
             ${post.tags && html`
                 <dt>Tags</dt>
                 <dd>
-                ${post.tags.map((tag, i) => html`<${PostTag} key=${i} name=${tag} />`)}
+                    ${post.tags.map((tag, i) => html`<${PostTag} key="tag-${i}" name=${tag} />`)}
                 </dd>
             `}
             ${post.type && html`
                 <dt>Type</dt>
                 <dd>
-                ${post.type.map((type, i) => html`<${PostType} key=${i} name=${type} />`)}
+                    ${post.type.map((type, i) => html`<${PostType} key="type-${i}" name=${type} />`)}
                 </dd>
             `}
             </${MetadataGrid}>

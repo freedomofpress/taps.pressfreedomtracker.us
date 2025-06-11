@@ -62,6 +62,7 @@ export default async function () {
             return {
                 platform: "Twitter",
                 type: d.Type.split(/,\s?/g),
+                tags: d.Tags !== '' ? d.Tags.split(/,\s?/g) : undefined,
                 primaryTarget: d['Primary Target'],
                 secondaryTarget: d['Secondary Target'],
                 mediaDescription: d['Media Description'],
