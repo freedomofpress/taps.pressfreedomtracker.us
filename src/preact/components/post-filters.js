@@ -28,9 +28,8 @@ const PostFilters = ({ onFiltersChange }) => {
             <div class="filter-group">
                 <label>Search posts:</label>
                 <input
-                    type="text"
+                    type="search"
                     class="filter-search"
-                    placeholder="Search content..."
                     value=${searchTerm}
                     onInput=${handleSearchChange}
                 />

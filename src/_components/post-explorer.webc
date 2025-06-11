@@ -7,10 +7,15 @@
     import { hydratePostExplorer } from '/preact-components.js'
 
     (async () => {
-        const postData = await (await fetch('/posts.json')).json()
+        const postData = (await (await fetch('/posts.json')).json()).map(
+            p => ({
+                ...p,
+                date: new Date(p.date)
+            })
+        ).sort((a, b) => b.date - a.date)
+
         class PostExplorer extends HTMLElement {
             connectedCallback() {
-                console.log('PostExplorer mounted')
                 hydratePostExplorer(this, postData)
             }
         }

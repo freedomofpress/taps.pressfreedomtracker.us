@@ -39,7 +39,7 @@ export default async function(eleventyConfig) {
             sourcemap: true,
         })
     })
-    eleventyConfig.addWatchTarget("src/preact/components")
+    eleventyConfig.addWatchTarget("src/preact")
 
     eleventyConfig.addPassthroughCopy("src/media")
 }
