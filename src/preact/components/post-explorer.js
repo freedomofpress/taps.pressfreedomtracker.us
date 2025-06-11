@@ -12,7 +12,7 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
 
     useEffect(() => {
         // When filters are updated, reset post indices
-        if (!filters.platform && !filters.searchTerm) {
+        if (!filters.platform && !filters.searchTerm && !filters.selectedTag && !filters.selectedType) {
             setPostStartIndex(initialRange[0])
         } else {
             setPostStartIndex(0)
@@ -24,6 +24,12 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
             posts.filter(post => {
                 // Check all filter conditions
                 const platformMatch = !filters.platform || post.platform === filters.platform
+
+                // Tag filter
+                const tagMatch = !filters.selectedTag || (post.tags && post.tags.includes(filters.selectedTag))
+
+                // Type filter
+                const typeMatch = !filters.selectedType || (post.type && post.type.includes(filters.selectedType))
 
                 let searchTermMatch = true
                 if (filters.searchTerm) {
@@ -39,7 +45,7 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
                 }
 
                 // All conditions must match for the post to be included
-                return platformMatch && searchTermMatch
+                return platformMatch && tagMatch && typeMatch && searchTermMatch
             }).sort((a, b) => b.date - a.date)
         )
     }, [filters])
@@ -55,7 +61,7 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
         <div class="post-explorer">
             <h2>Full Archive</h2>
             <div class="filters-wrapper">
-                <${PostFilters} onFiltersChange=${setFilters} />
+                <${PostFilters} onFiltersChange=${setFilters} posts=${posts} />
             </div>
             <div class="main">
                 <${PostList} posts=${filteredPosts.slice(postStartIndex, postEndIndex)} />

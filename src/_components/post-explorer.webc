@@ -139,7 +139,9 @@
     }
 
     .filter-search,
-    .filter-platform {
+    .filter-platform,
+    .filter-tag,
+    .filter-type {
         padding: 0.75rem 1rem;
         font-size: var(--font-size-base);
         color: var(--color-base);
@@ -151,7 +153,9 @@
     }
 
     .filter-search:focus,
-    .filter-platform:focus {
+    .filter-platform:focus,
+    .filter-tag:focus,
+    .filter-type:focus {
         outline: none;
         border-color: var(--color-muted);
         background: var(--color-background-accent);
@@ -163,7 +167,9 @@
         opacity: 0.7;
     }
 
-    .filter-platform {
+    .filter-platform,
+    .filter-tag,
+    .filter-type {
         cursor: pointer;
     }
 
