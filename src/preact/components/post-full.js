@@ -1,16 +1,11 @@
 import { html } from 'htm/preact'
 import PostTag from './post-tag.js'
 import PostType from './post-type.js'
+import PostBody from './post-body.js'
 import MetadataGrid from './metadata-grid.js'
 
 const PostFull = ({ post, horizontal }) => {
   if (!post) return null
-
-  const getContentSizeClass = (text) => {
-    if (text.length > 500) return 'long'
-    if (text.length > 200) return 'medium'
-    return 'short'
-  }
 
   const formattedDate = new Date(post.date).toLocaleString('en-US', {
     month: 'long',
@@ -25,17 +20,7 @@ const PostFull = ({ post, horizontal }) => {
         <div class="post-author-name">Donald J. Trump</div>
         <div class="post-author-handle">@realDonaldTrump</div>
       </div>
-      <div class="post-body">
-        <div class="post-content post-content-${getContentSizeClass(post.content)}">
-            ${post.content}
-        </div>
-        ${!!post.mediaDescription.trim() && html`
-            <dl class="post-media-description">
-                <dt>Media Description</dt>
-                <dd>${post.mediaDescription}</dd>
-            </dl>
-        `}
-      </div>
+      <${PostBody} post=${post} />
       <div class="post-metadata">
         <${MetadataGrid}>
           <dt>Posted</dt>

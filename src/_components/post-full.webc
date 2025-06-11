@@ -66,6 +66,12 @@
         grid-area: content;
         padding-right: var(--padding);
         padding-bottom: var(--padding);
+        max-width: 100%;
+    }
+
+    .post-content {
+        max-width: 100%;
+        overflow: auto;
     }
 
     .post-content-long {
