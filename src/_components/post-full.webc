@@ -104,8 +104,12 @@
     }
 
     .post-link {
-        color: var(--color-muted);
-        text-decoration: none;
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    .post-link:hover {
+        background-color: var(--color-pft-yellow);
     }
 
     /* Metadata Grid Styles */

@@ -28,7 +28,7 @@ const PostFull = ({ post, horizontal }) => {
             <dd>
                 <a class="post-link" href=${`/post/${post.hash}/`}>
                 <time datetime=${post.dateString}>${formattedDate}</time>
-                </a>
+                </a>${' '}
                 (<a class="post-link" href=${post.link}>${post.platform}</a>)
             </dd>
             ${post.primaryTarget && html`
@@ -36,7 +36,7 @@ const PostFull = ({ post, horizontal }) => {
                 <dd>
                 ${post.secondaryTarget && post.primaryTarget !== post.secondaryTarget
                     ? html`
-                    <span>${post.primaryTarget}</span>
+                    <span>${post.primaryTarget}</span>${' '}
                     (<span>${post.secondaryTarget}</span>)
                     `
                     : html`<span>${post.primaryTarget}</span>`
