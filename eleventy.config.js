@@ -10,7 +10,6 @@ export default async function(eleventyConfig) {
 	eleventyConfig.addPlugin(pluginWebc, {
         components: [
             'src/_components/**/*.webc',
-			"npm:@11ty/is-land/*.webc",
         ]
     })
 
@@ -42,7 +41,7 @@ export default async function(eleventyConfig) {
             }
         })
     })
-    eleventyConfig.addWatchTarget("src/preact")
+    eleventyConfig.addWatchTarget("src/preact/**.js")
 
     eleventyConfig.addPassthroughCopy("src/media")
 }

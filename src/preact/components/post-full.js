@@ -1,4 +1,3 @@
-import { h } from 'preact'
 import { html } from 'htm/preact'
 import PostTag from './post-tag.js'
 import PostType from './post-type.js'

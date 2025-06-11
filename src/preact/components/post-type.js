@@ -1,4 +1,3 @@
-import { h } from 'preact'
 import { html } from 'htm/preact'
 
 const PostType = ({ name }) => {
