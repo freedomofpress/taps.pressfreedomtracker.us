@@ -16,18 +16,26 @@
         overflow: hidden;
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
         grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
-        grid-template-areas: "avatar author" "avatar content" "metadata metadata";
+        grid-template-areas:
+            "avatar   author"
+            "avatar   content"
+            "metadata metadata";
     }
 
     .post-full.horizontal {
         grid-template-columns: calc(var(--avatar-size) + var(--padding)) auto calc(var(--metadata-width) - var(--padding));
-        grid-template-areas: "avatar author metadata" "avatar content metadata";
+        grid-template-areas:
+            "avatar author  metadata"
+            "avatar content metadata";
     }
 
     @media (max-width: 1024px) {
         .post-full.horizontal {
             grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
-            grid-template-areas: "avatar author" "avatar content" "metadata metadata";
+            grid-template-areas:
+                "avatar   author"
+                "avatar   content"
+                "metadata metadata";
         }
     }
 
