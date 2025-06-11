@@ -14,14 +14,34 @@ export default async function(eleventyConfig) {
         ]
     })
 
+    // Preact SSR template filter
     eleventyConfig.addFilter('preact', async (filePath, props) => {
         const appDefinition = await import(filePath)
         const output = preactRender(html`<${appDefinition.default} ...${props} />`)
         return output
     })
 
+    // ESBuild
+    eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
+        const esbuild = await import("esbuild")
+        const entryPoints = [
+            {
+                in: path.join(dir.input, 'preact', 'entry.js'),
+                out: path.join('preact-components'),
+            },
+        ]
+        await esbuild.build({
+            entryPoints,
+            format: 'esm',
+            outdir: dir.output,
+            bundle: true,
+            minify: +process.env.PROD ? true : false,
+            sourcemap: true,
+        })
+    })
+    eleventyConfig.addWatchTarget("src/preact/components")
+
     eleventyConfig.addPassthroughCopy("src/media")
-    eleventyConfig.addPassthroughCopy("src/preact")
 }
 
 export const config = {

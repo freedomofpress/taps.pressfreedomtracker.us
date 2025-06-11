@@ -1,0 +1,50 @@
+<div @raw="preact(
+    './src/preact/components/post-explorer.js',
+    { posts: posts }
+)" webc:nokeep></div>
+
+<script>
+    import { hydratePostExplorer } from '/preact-components.js'
+
+    (async () => {
+        const postData = await (await fetch('/posts.json')).json()
+        class PostExplorer extends HTMLElement {
+            connectedCallback() {
+                console.log('PostExplorer mounted')
+                hydratePostExplorer(this, postData)
+            }
+        }
+        customElements.define('post-explorer', PostExplorer)
+    })()
+</script>
+
+<style>
+    .post-explorer {
+        display: grid;
+        grid-template-columns: 33% 66%;
+        gap: var(--line-height-base);
+    }
+
+    .pagination {
+        text-align: center;
+        margin: var(--line-height-base) 0;
+    }
+
+    .pagination-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        font-size: var(--font-size-base);
+        color: var(--color-base);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-button:hover {
+        background: var(--color-background-accent);
+        border-color: var(--color-muted);
+    }
+</style>

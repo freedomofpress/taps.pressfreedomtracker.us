@@ -8,17 +8,4 @@ intro: true
 
 <post-grid :@posts="$data.posts.slice(0, 3)"></post-grid>
 
-<layout-sidebar>
-    <div slot="sidebar">
-        <h2>Filters</h2>
-        <post-filters></post-filters>
-    </div>
-    <div slot="main">
-        <h2>Full Archive</h2>
-        <!-- Static posts will be replaced by filtered results -->
-        <div data-post-container>
-            <post-list :@posts="$data.posts.slice(0, 25)" slot="main"></post-list>
-        </div>
-        <a href="/page/2/" id="pagination-link">Next Page</a>
-    </div>
-</layout-sidebar>
+<post-explorer :@posts="$data.posts.slice(3)"></post-explorer>

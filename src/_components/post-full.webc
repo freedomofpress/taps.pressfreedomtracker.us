@@ -1,5 +1,5 @@
 <div @raw="preact(
-    './src/preact/post-full.js',
+    './src/preact/components/post-full.js',
     { post: post, horizontal: horizontal }
 )"></div>
 
