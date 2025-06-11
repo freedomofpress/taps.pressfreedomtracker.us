@@ -11,11 +11,9 @@ const PostBody = ({ post }) => {
                         __html: Autolinker.link(
                             post.content,
                             {
-                                stripPrefix: false,
-                                stripTrailingSlash: false,
                                 newWindow: false,
                                 truncate: {
-                                    length: 30,
+                                    length: 38,
                                     location: 'smart',
                                 },
                             }

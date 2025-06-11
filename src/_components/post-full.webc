@@ -15,7 +15,7 @@
         gap: 0 var(--line-height-base);
         overflow: hidden;
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
-        grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
+        grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, 1fr);
         grid-template-areas:
             "avatar   author"
             "avatar   content"
@@ -23,7 +23,7 @@
     }
 
     .post-full.horizontal {
-        grid-template-columns: calc(var(--avatar-size) + var(--padding)) auto calc(var(--metadata-width) - var(--padding));
+        grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, auto) minmax(var(--metadata-width), var(--metadata-width));
         grid-template-areas:
             "avatar author  metadata"
             "avatar content metadata";
@@ -31,7 +31,7 @@
 
     @media (max-width: 1024px) {
         .post-full.horizontal {
-            grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
+            grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, 1fr);
             grid-template-areas:
                 "avatar   author"
                 "avatar   content"
@@ -71,7 +71,7 @@
 
     .post-content {
         max-width: 100%;
-        overflow: auto;
+        overflow-x: auto;
     }
 
     .post-content-long {
