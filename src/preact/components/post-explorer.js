@@ -53,12 +53,11 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
 
     return html`
         <div class="post-explorer">
-            <div class="filters">
-                <h2>Filters</h2>
+            <h2>Full Archive</h2>
+            <div class="filters-wrapper">
                 <${PostFilters} onFiltersChange=${setFilters} />
             </div>
             <div class="main">
-                <h2>Full Archive</h2>
                 <${PostList} posts=${filteredPosts.slice(postStartIndex, postEndIndex)} />
                 ${hasMorePosts && isClient && html`
                     <div class="pagination">

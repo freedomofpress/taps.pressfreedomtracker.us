@@ -13,7 +13,7 @@
     :host {
         max-width: var(--page-max-width);
         margin: 0 auto;
-        margin-top: calc(4 * var(--line-height-base));
+        margin-top: clamp(2rem, 8vw, 8rem);
         margin-bottom: calc(3 * var(--line-height-base));
     }
 
