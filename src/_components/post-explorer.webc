@@ -4,9 +4,12 @@
 )" webc:nokeep></div>
 
 <script>
-    import { hydratePostExplorer } from '/preact-components.js'
-
     (async () => {
+        // This extracts the URL for the bundle from the preload tag in the header
+        // which ensures they're the same URL. See _layouts/page.webc for where that is defined.
+        const preactBundleUrl = document.getElementById('preact-bundle').href
+        const { hydratePostExplorer } = await import(preactBundleUrl)
+
         const postData = (await (await fetch('/posts.json')).json()).map(
             p => ({
                 ...p,

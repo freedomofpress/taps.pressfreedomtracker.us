@@ -1,5 +1,5 @@
 import path from 'path'
-import { readFile } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import pluginWebc from "@11ty/eleventy-plugin-webc"
 
 import preactRender from 'preact-render-to-string'
@@ -25,15 +25,15 @@ export default async function(eleventyConfig) {
     eleventyConfig.addWatchTarget("./src/preact/")
 
     // ESBuild
-    eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
+    eleventyConfig.on('eleventy.before', async ({ dir, results, runMode, outputMode }) => {
         const esbuild = await import("esbuild")
         const entryPoints = [
             {
                 in: path.join(dir.input, 'preact', 'entry.js'),
-                out: path.join('preact-components'),
+                out: 'preact-components',
             },
         ]
-        await esbuild.build({
+        const result = await esbuild.build({
             entryPoints,
             format: 'esm',
             outdir: dir.output,
@@ -42,8 +42,22 @@ export default async function(eleventyConfig) {
             sourcemap: true,
             define: {
                 'PROD': process.env.PROD,
-            }
+            },
+            entryNames: '[name]-[hash]',
+            metafile: true
         })
+
+        // Save metafile for use in templates
+        await writeFile('.cache/esbuild-meta.json', JSON.stringify(result.metafile), 'utf-8')
+    })
+
+    // Filter to get esbuild output path
+    eleventyConfig.addFilter('asset', async (entryPoint) => {
+        const metaJson = await readFile('.cache/esbuild-meta.json', 'utf-8')
+        const meta = JSON.parse(metaJson)
+        const outputs = Object.entries(meta.outputs)
+        const outputMeta = outputs.find(([name, output]) => output.entryPoint === 'src/' + entryPoint)
+        return outputMeta[0].replace(/^dist\//, '/')
     })
 
     eleventyConfig.addPassthroughCopy("src/media")
