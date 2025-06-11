@@ -62,68 +62,79 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
     }
 
     return html`
-        <div class="post-filters">
-            <div class="filter-group">
-                <label>Search posts:</label>
-                <input
-                    type="search"
-                    class="filter-search"
-                    value=${searchTerm}
-                    onInput=${handleSearchChange}
-                />
-            </div>
+        <details class="post-filters-details" open>
+            <summary class="post-filters-summary">
+                <span>Filters</span>
+                <span class="filter-count" style=${
+                    (searchTerm || platform || selectedTag || selectedType) ?
+                    'display: inline;' : 'display: none;'
+                }>
+                    (${[searchTerm, platform, selectedTag, selectedType].filter(Boolean).length} active)
+                </span>
+            </summary>
+            <div class="post-filters">
+                <div class="filter-group">
+                    <label>Search posts:</label>
+                    <input
+                        type="search"
+                        class="filter-search"
+                        value=${searchTerm}
+                        onInput=${handleSearchChange}
+                    />
+                </div>
 
-            <div class="filter-group">
-                <label>Platform:</label>
-                <select
-                    class="filter-platform"
-                    value=${platform}
-                    onChange=${handlePlatformChange}
-                >
-                    <option value="">All platforms</option>
-                    <option value="Twitter">Twitter</option>
-                    <option value="Truth Social">Truth Social</option>
-                </select>
-            </div>
+                <div class="filter-group">
+                    <label>Platform:</label>
+                    <select
+                        class="filter-platform"
+                        value=${platform}
+                        onChange=${handlePlatformChange}
+                    >
+                        <option value="">All platforms</option>
+                        <option value="Twitter">Twitter</option>
+                        <option value="Truth Social">Truth Social</option>
+                    </select>
+                </div>
 
-            <div class="filter-group">
-                <label>Tag:</label>
-                <select
-                    class="filter-tag"
-                    value=${selectedTag}
-                    onChange=${handleTagChange}
-                >
-                    <option value="">All tags</option>
-                    ${uniqueTags.map(tag => html`
-                        <option key=${tag} value=${tag}>${tag}</option>
-                    `)}
-                </select>
-            </div>
+                <div class="filter-group">
+                    <label>Tag:</label>
+                    <select
+                        class="filter-tag"
+                        value=${selectedTag}
+                        onChange=${handleTagChange}
+                    >
+                        <option value="">All tags</option>
+                        ${uniqueTags.map(tag => html`
+                            <option key=${tag} value=${tag}>${tag}</option>
+                        `)}
+                    </select>
+                </div>
 
-            <div class="filter-group">
-                <label>Type:</label>
-                <select
-                    class="filter-type"
-                    value=${selectedType}
-                    onChange=${handleTypeChange}
-                >
-                    <option value="">All types</option>
-                    ${uniqueTypes.map(type => html`
-                        <option key=${type} value=${type}>${type}</option>
-                    `)}
-                </select>
-            </div>
+                <div class="filter-group">
+                    <label>Type:</label>
+                    <select
+                        class="filter-type"
+                        value=${selectedType}
+                        onChange=${handleTypeChange}
+                    >
+                        <option value="">All types</option>
+                        ${uniqueTypes.map(type => html`
+                            <option key=${type} value=${type}>${type}</option>
+                        `)}
+                    </select>
+                </div>
 
-            <div class="filter-group">
-                <button
-                    type="button"
-                    class="filter-clear"
-                    onClick=${handleClearFilters}
-                >
-                    × Clear all filters
-                </button>
+                <div class="filter-group">
+                    <button
+                        type="button"
+                        class="filter-clear"
+                        onClick=${handleClearFilters}
+                    >
+                        × Clear all filters
+                    </button>
+                </div>
             </div>
-        </div>
+        </details>
     `
 }
 
