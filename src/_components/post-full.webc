@@ -136,6 +136,7 @@
     /* Post Tag Styles */
     .post-tag, .post-type {
         display: inline-block;
+        max-width: 100%;
     }
 
     .post-tag-link, .post-type-link {
