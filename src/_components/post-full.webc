@@ -24,6 +24,13 @@
         grid-template-areas: "avatar author metadata" "avatar content metadata";
     }
 
+    @media (max-width: 1024px) {
+        .post-full.horizontal {
+            grid-template-columns: calc(var(--avatar-size) + var(--padding)) 1fr;
+            grid-template-areas: "avatar author" "avatar content" "metadata metadata";
+        }
+    }
+
     .post-avatar {
         grid-area: avatar;
         width: var(--avatar-size);
