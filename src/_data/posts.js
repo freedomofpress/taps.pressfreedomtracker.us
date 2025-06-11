@@ -33,6 +33,7 @@ export default async function () {
                 type: d.Type.split(/,\s?/g),
                 primaryTarget: d['Primary Target'],
                 secondaryTarget: d['Secondary Target'],
+                mediaDescription: d['Media Description'],
                 link: d.Link,
                 content: d.Content,
                 tags: d.Tags !== '' ? d.Tags.split(/,\s?/g) : undefined,
@@ -63,6 +64,7 @@ export default async function () {
                 type: d.Type.split(/,\s?/g),
                 primaryTarget: d['Primary Target'],
                 secondaryTarget: d['Secondary Target'],
+                mediaDescription: d['Media Description'],
                 link: d.Link,
                 content: d.Content,
                 hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
@@ -73,10 +75,11 @@ export default async function () {
 
     // Deduplicate posts by hash and sort by date (newest first)
     const allPosts = [...twitterPosts, ...truthPosts]
+        .reverse() // The sheets are sorted date ascending, but we need descending
         .filter((post, index, self) =>
             index === self.findIndex(p => p.hash === post.hash)
         )
-        .sort((a, b) => b.date - a.date)
+        .map((d, i) => ({ ...d, i: i }))
 
     return allPosts
 }

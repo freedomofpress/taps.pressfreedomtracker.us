@@ -25,9 +25,10 @@
         --color-base: #333;
         --color-muted: #666;
         --color-muted-more: #999;
-        --color-border: #ddd;
+        --color-border: #CCC;
         --color-background: #fff;
         --color-background-accent: #f8f8f8;
+        --color-background-subtle: #FAFAFA;
         --color-pft-yellow: #f2fc67;
         --color-pft-yellow-light: #fafec2;
 

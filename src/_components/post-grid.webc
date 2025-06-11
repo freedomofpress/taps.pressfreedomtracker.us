@@ -3,7 +3,7 @@
 <style webc:scoped="post-grid">
     :host {
         display: grid;
-        grid-template-columns: repeat(3, 33%);
+        grid-template-columns: repeat(3, minmax(0,33.4%));
         grid-auto-flow: row;
         column-gap: var(--line-height-base);
         align-items: start;

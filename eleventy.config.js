@@ -15,10 +15,14 @@ export default async function(eleventyConfig) {
 
     // Preact SSR template filter
     eleventyConfig.addFilter('preact', async (filePath, props) => {
-        const appDefinition = await import(filePath)
+        // Timestamp is a cachebreaker that forces the import to be re-evaluated
+        // so that live updates work
+        const path = !!process.env.PROD ? filePath : filePath + '?t=' + Date.now()
+        const appDefinition = await import(path)
         const output = preactRender(html`<${appDefinition.default} ...${props} />`)
         return output
     })
+    eleventyConfig.addWatchTarget("./src/preact/")
 
     // ESBuild
     eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
@@ -41,7 +45,6 @@ export default async function(eleventyConfig) {
             }
         })
     })
-    eleventyConfig.addWatchTarget("src/preact/**.js")
 
     eleventyConfig.addPassthroughCopy("src/media")
 }
