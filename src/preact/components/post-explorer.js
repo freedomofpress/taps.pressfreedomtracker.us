@@ -13,7 +13,11 @@ const PostExplorer = ({ posts }) => {
 
     useEffect(() => {
         // When filters are updated, reset post indices
-        setPostStartIndex(0)
+        if (!filters.platform && !filters.searchTerm) {
+            setPostStartIndex(3)
+        } else {
+            setPostStartIndex(0)
+        }
         setPostEndIndex(postsPerPage)
 
         // Filter posts to matches
