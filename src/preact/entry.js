@@ -1,3 +1,6 @@
+// Enable debug mode in development
+if (+PROD === 0) await import('preact/debug')
+
 import { hydrate } from 'preact'
 import { html } from 'htm/preact'
 

@@ -37,6 +37,9 @@ export default async function(eleventyConfig) {
             bundle: true,
             minify: +process.env.PROD ? true : false,
             sourcemap: true,
+            define: {
+                'PROD': process.env.PROD,
+            }
         })
     })
     eleventyConfig.addWatchTarget("src/preact")
