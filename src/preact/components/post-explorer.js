@@ -15,7 +15,7 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
         if (!filters.platform && !filters.searchTerm) {
             setPostStartIndex(initialRange[0])
         } else {
-            setPostStartIndex(initialRange[1])
+            setPostStartIndex(0)
         }
         setPostEndIndex(postsPerPage)
 
