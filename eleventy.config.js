@@ -22,6 +22,7 @@ export default async function(eleventyConfig) {
         const output = preactRender(html`<${appDefinition.default} ...${props} />`)
         return output
     })
+    eleventyConfig.addWatchTarget("./src/preact/")
 
     // ESBuild
     eleventyConfig.on('eleventy.after', async ({ dir, results, runMode, outputMode }) => {
@@ -44,7 +45,6 @@ export default async function(eleventyConfig) {
             }
         })
     })
-    eleventyConfig.addWatchTarget("src/preact/**.js")
 
     eleventyConfig.addPassthroughCopy("src/media")
 }
