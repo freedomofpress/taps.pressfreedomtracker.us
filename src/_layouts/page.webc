@@ -4,8 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title @raw="$data.title"></title>
+        <link rel="modulepreload" href="/preact-components.js" webc:keep>
         <link rel="stylesheet" :href="getBundleFileUrl('css')" webc:keep />
-        <script :src="getBundleFileUrl('js')" webc:keep></script>
+        <script :src="getBundleFileUrl('js')" type="module" webc:keep></script>
     </head>
     <body>
         <fpf-banner></fpf-banner>
