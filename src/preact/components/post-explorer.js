@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'preact/hooks'
 import PostList from './post-list.js'
 import PostFilters from './post-filters.js'
 
-// Utility functions moved outside component to avoid redefinition on each render
 const getFiltersFromURL = () => {
     if (typeof window === 'undefined') return {}
 
