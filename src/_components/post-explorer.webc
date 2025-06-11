@@ -30,7 +30,29 @@
     .post-explorer {
         display: grid;
         grid-template-columns: 33% 66%;
+        grid-template-areas:
+            "header header"
+            "filters main";
         gap: var(--line-height-base);
+    }
+
+    .post-explorer h2 {
+        grid-area: header;
+        margin-bottom: 0;
+    }
+
+    .main {
+        grid-area: main;
+    }
+
+    @media (max-width: 1024px) {
+        .post-explorer {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "header"
+                "filters"
+                "main";
+        }
     }
 
     .pagination {
@@ -55,4 +77,124 @@
         background: var(--color-background-accent);
         border-color: var(--color-muted);
     }
+
+    /* Post Filters */
+    .filters-wrapper {
+        position: relative;
+        grid-area: filters;
+    }
+    .post-filters {
+        position: sticky;
+        top: 2rem;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        padding: var(--line-height-base);
+        margin-bottom: var(--line-height-base);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: end;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        /* On mobile we need post-explorer to be the positioning parent */
+        .post-explorer {
+            position: relative;
+        }
+
+        .filters-wrapper {
+            position: sticky;
+            top: 2rem;
+            z-index: 1;
+        }
+
+        .post-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 200px;
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
+        .filter-group {
+            min-width: auto;
+        }
+    }
+
+    .filter-group label {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: var(--color-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-search,
+    .filter-platform {
+        padding: 0.75rem 1rem;
+        font-size: var(--font-size-base);
+        color: var(--color-base);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .filter-search:focus,
+    .filter-platform:focus {
+        outline: none;
+        border-color: var(--color-muted);
+        background: var(--color-background-accent);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-search::placeholder {
+        color: var(--color-muted);
+        opacity: 0.7;
+    }
+
+    .filter-platform {
+        cursor: pointer;
+    }
+
+    .filter-clear {
+        background: transparent;
+        color: var(--color-muted);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        font-size: var(--font-size-base);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        white-space: nowrap;
+        align-self: end;
+    }
+
+    @media (max-width: 768px) {
+        .filter-clear {
+            align-self: stretch;
+        }
+    }
+
+    .filter-clear:hover {
+        background: var(--color-background-accent);
+        color: var(--color-base);
+        border-color: var(--color-muted);
+    }
+
+    .filter-clear:active {
+        transform: translateY(1px);
+    }
+
 </style>

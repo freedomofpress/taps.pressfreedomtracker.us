@@ -24,7 +24,7 @@ const PostFilters = ({ onFiltersChange }) => {
     }
 
     return html`
-        <div class="filter-container">
+        <div class="post-filters">
             <div class="filter-group">
                 <label>Search posts:</label>
                 <input
