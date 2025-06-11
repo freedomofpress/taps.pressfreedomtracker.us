@@ -1,5 +1,5 @@
 import path from 'path'
-import { readFile, writeFile } from 'fs/promises'
+import { readFile, writeFile, mkdir } from 'fs/promises'
 import pluginWebc from "@11ty/eleventy-plugin-webc"
 
 import preactRender from 'preact-render-to-string'
@@ -48,6 +48,7 @@ export default async function(eleventyConfig) {
         })
 
         // Save metafile for use in templates
+        await mkdir('.cache', { recursive: true }) // Create cache dir if doesn't exist
         await writeFile('.cache/esbuild-meta.json', JSON.stringify(result.metafile), 'utf-8')
     })
 
