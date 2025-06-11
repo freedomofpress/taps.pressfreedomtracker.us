@@ -75,11 +75,11 @@ export default async function () {
 
     // Deduplicate posts by hash and sort by date (newest first)
     const allPosts = [...twitterPosts, ...truthPosts]
+        .reverse() // The sheets are sorted date ascending, but we need descending
         .filter((post, index, self) =>
             index === self.findIndex(p => p.hash === post.hash)
         )
         .map((d, i) => ({ ...d, i: i }))
-        .sort((a, b) => b.date - a.date)
 
     return allPosts
 }
