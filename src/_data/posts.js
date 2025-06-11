@@ -33,6 +33,7 @@ export default async function () {
                 type: d.Type.split(/,\s?/g),
                 primaryTarget: d['Primary Target'],
                 secondaryTarget: d['Secondary Target'],
+                mediaDescription: d['Media Description'],
                 link: d.Link,
                 content: d.Content,
                 tags: d.Tags !== '' ? d.Tags.split(/,\s?/g) : undefined,
@@ -63,6 +64,7 @@ export default async function () {
                 type: d.Type.split(/,\s?/g),
                 primaryTarget: d['Primary Target'],
                 secondaryTarget: d['Secondary Target'],
+                mediaDescription: d['Media Description'],
                 link: d.Link,
                 content: d.Content,
                 hash: hashString(`${d.platform || 'Unknown'}${d.Content}${dateString || 'InvalidDate'}`),
@@ -76,6 +78,7 @@ export default async function () {
         .filter((post, index, self) =>
             index === self.findIndex(p => p.hash === post.hash)
         )
+        .map((d, i) => ({ ...d, i: i }))
         .sort((a, b) => b.date - a.date)
 
     return allPosts
