@@ -1,5 +1,5 @@
 <div webc:root="override">
-    A project of the <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> team at <img src="/media/logo-mini.svg" /> <a href="https://freedom.press/">Freedom of the Press Foundation</a>.
+    A project of the <a href="https://pressfreedomtracker.us/">U.S. Press Freedom Tracker</a> at <img src="/media/logo-mini.svg" /> <a href="https://freedom.press/">Freedom of the Press Foundation</a>
 </div>
 
 <style webc:scoped="fpf-banner">
