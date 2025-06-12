@@ -1,9 +1,14 @@
 import { html } from 'htm/preact'
+import FilterLink from './filter-link.js'
 
 const PostType = ({ name }) => {
   return html`
     <span class="post-type">
-      <a href="#" class="post-type-link" title=${name}>${name}</a>
+      <${FilterLink}
+        filterType="type"
+        value=${name}
+        className="post-type-link"
+      />
     </span>
   `
 }

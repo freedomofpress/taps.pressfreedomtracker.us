@@ -1,9 +1,14 @@
 import { html } from 'htm/preact'
+import FilterLink from './filter-link.js'
 
 const PostTag = ({ name }) => {
   return html`
     <span class="post-tag">
-      <a href="#" class="post-tag-link" title=${name}>${name}</a>
+      <${FilterLink}
+        filterType="tag"
+        value=${name}
+        className="post-tag-link"
+      />
     </span>
   `
 }
