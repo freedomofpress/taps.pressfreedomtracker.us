@@ -116,7 +116,13 @@
     .post-filters-summary::before {
         content: "▼";
         margin-right: 0.5rem;
+        transform: rotate(0);
         transition: transform 0.2s ease;
+        display: inline-block;
+    }
+
+    .post-filters-details:not([open]) .post-filters-summary {
+        border-bottom: none;
     }
 
     .post-filters-details:not([open]) .post-filters-summary::before {
