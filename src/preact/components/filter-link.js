@@ -1,6 +1,6 @@
 import { html } from 'htm/preact'
 
-const FilterLink = ({ filterType, value, className, children }) => {
+const FilterLink = ({ filterType, value, className, children, basePath = '/' }) => {
   const handleClick = (e) => {
     if (typeof window === 'undefined') return
 
@@ -19,8 +19,14 @@ const FilterLink = ({ filterType, value, className, children }) => {
 
   // Generate the filter URL for the href
   const getFilterURL = () => {
-    if (typeof window === 'undefined') return '#'
+    if (typeof window === 'undefined') {
+      // Server-side rendering: generate a basic filter URL
+      const urlParams = new URLSearchParams()
+      urlParams.set(filterType, value)
+      return `${basePath}?${urlParams.toString()}`
+    }
 
+    // Client-side: preserve existing query parameters
     const urlParams = new URLSearchParams(window.location.search)
     urlParams.set(filterType, value)
     return `${window.location.pathname}?${urlParams.toString()}`
