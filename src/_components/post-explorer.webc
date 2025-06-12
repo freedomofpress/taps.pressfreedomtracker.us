@@ -1,0 +1,264 @@
+<div @raw="preact(
+    './src/preact/components/post-explorer.js',
+    { posts: posts, postsPerPage: 25, initialRange: [3, 25] }
+)" webc:nokeep></div>
+
+<script>
+    (async () => {
+        // This extracts the URL for the bundle from the preload tag in the header
+        // which ensures they're the same URL. See _layouts/page.webc for where that is defined.
+        const preactBundleUrl = document.getElementById('preact-bundle').href
+        const { hydratePostExplorer } = await import(preactBundleUrl)
+
+        const postData = (await (await fetch('/posts.json')).json()).map(
+            p => ({
+                ...p,
+                date: new Date(p.date)
+            })
+        )
+
+        class PostExplorer extends HTMLElement {
+            connectedCallback() {
+                hydratePostExplorer(this, { posts: postData, postsPerPage: 25, initialRange: [3, 25] })
+            }
+        }
+        customElements.define('post-explorer', PostExplorer)
+    })()
+</script>
+
+<style>
+    .post-explorer {
+        display: grid;
+        grid-template-columns: 33% 66%;
+        grid-template-areas:
+            "header header"
+            "filters main";
+        gap: var(--line-height-base);
+    }
+
+    .post-explorer h2 {
+        grid-area: header;
+        margin-bottom: 0;
+    }
+
+    .main {
+        grid-area: main;
+    }
+
+    @media (max-width: 1024px) {
+        .post-explorer {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "header"
+                "filters"
+                "main";
+        }
+    }
+
+    .pagination {
+        text-align: center;
+        margin: var(--line-height-base) 0;
+    }
+
+    .pagination-button {
+        display: inline-block;
+        padding: 1rem 2rem;
+        font-size: var(--font-size-base);
+        color: var(--color-base);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-button:hover {
+        background: var(--color-background-accent);
+        border-color: var(--color-muted);
+    }
+
+    /* Post Filters */
+    .filters-wrapper {
+        position: relative;
+        grid-area: filters;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .filters-wrapper * {
+        max-width: 100%;
+    }
+
+    .post-filters-details {
+        position: sticky;
+        top: 2rem;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        margin-bottom: var(--line-height-base);
+        z-index: 1;
+    }
+
+    .post-filters-summary {
+        padding: var(--line-height-base);
+        font-weight: bold;
+        cursor: pointer;
+        display: none; /* Hidden on desktop */
+        user-select: none;
+        list-style: none;
+    }
+
+    .post-filters-summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .post-filters-summary::before {
+        content: "▼";
+        margin-right: 0.5rem;
+        transform: rotate(0);
+        transition: transform 0.2s ease;
+        display: inline-block;
+    }
+
+    .post-filters-details:not([open]) .post-filters-summary {
+        border-bottom: none;
+    }
+
+    .post-filters-details:not([open]) .post-filters-summary::before {
+        transform: rotate(-90deg);
+    }
+
+    .filter-count {
+        color: var(--color-muted);
+        font-weight: normal;
+        font-size: 0.9em;
+        margin-left: 0.5rem;
+    }
+
+    .post-filters {
+        padding: var(--line-height-base);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: end;
+    }
+
+    @media (max-width: 768px) {
+        /* On mobile we need post-explorer to be the positioning parent */
+        .post-explorer {
+            position: relative;
+        }
+
+        .filters-wrapper {
+            position: sticky;
+            top: 2rem;
+            z-index: 1;
+        }
+
+        .post-filters-summary {
+            display: block; /* Show summary on mobile */
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .post-filters-details:not([open]) .post-filters {
+            display: none;
+        }
+
+        .post-filters {
+            flex-direction: column;
+            align-items: stretch;
+            padding-top: calc(0.75 * var(--line-height-base));
+        }
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 200px;
+        flex: 1;
+    }
+
+    @media (max-width: 768px) {
+        .filter-group {
+            min-width: auto;
+        }
+    }
+
+    .filter-group label {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: var(--color-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .filter-search,
+    .filter-select {
+        padding: 0.75rem 1rem;
+        font-size: var(--font-size-base);
+        color: var(--color-base);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+
+    .filter-search:focus,
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--color-muted);
+        background-color: var(--color-background-accent);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-search::placeholder {
+        color: var(--color-muted);
+        opacity: 0.7;
+    }
+
+    .filter-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+        padding-right: 2.5rem;
+    }
+
+    .filter-clear {
+        background: transparent;
+        color: var(--color-muted);
+        border: 1px solid var(--color-border);
+        border-radius: 4px;
+        padding: 0.75rem 1rem;
+        font-size: var(--font-size-base);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+        white-space: nowrap;
+        align-self: end;
+    }
+
+    @media (max-width: 768px) {
+        .filter-clear {
+            align-self: stretch;
+        }
+    }
+
+    .filter-clear:hover {
+        background: var(--color-background-accent);
+        color: var(--color-base);
+        border-color: var(--color-muted);
+    }
+
+    .filter-clear:active {
+        transform: translateY(1px);
+    }
+
+</style>

@@ -1,9 +1,10 @@
 <header webc:root="override">
     <h1>Trump <span>Anti-Press</span> Social Media&nbsp;Tracker</h1>
     <if webc:if="intro" webc:nokeep>
-        <p class="p1">When it comes to combative relationships between presidents and the press, Donald Trump’s social media use sets him apart.</p>
-        <p>To document this, we have cataloged every post on social media – first on Twitter, now X, and later on Truth Social – in which he degraded journalists, news outlets or the news media as a whole, dating back to June 16, 2015, when he descended the escalator in his eponymous tower in New York City.</p>
-        <p><a href="https://pressfreedomtracker.us/blog/all-the-presidents-invective/">Read more about the project &rarr;</a></p>    
+        <p class="p1">Few modern presidents have waged a more visible or sustained campaign against the press than Donald Trump.</p>
+        <p>From the launch of his political career, Trump has used social platforms — first Twitter, then Truth Social — to attack, belittle and discredit journalists, news outlets and the media as a whole.</p>
+        <p>To better understand the scope and impact of Trump’s anti-press rhetoric, we have systematically <a href="https://docs.google.com/spreadsheets/d/1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU/edit?gid=201966548">cataloged</a> his posts attacking the news media. This dataset spans from June 16, 2015, the day he launched his winning campaign, through his removal from Twitter in January 2021 in the wake of the Jan. 6 riot at the U.S. Capitol. It picks back up on Nov. 15, 2022, when Trump officially launched his latest campaign, and will continue through his tenure in the White House.</p>
+        <p><a href="https://pressfreedomtracker.us/blog/all-the-presidents-invective/">Read more about the project &rarr;</a></p>
     </if>
     <p webc:if="!intro"><a href="/">&larr; Home</a></p>
 </header>
@@ -12,12 +13,12 @@
     :host {
         max-width: var(--page-max-width);
         margin: 0 auto;
-        margin-top: calc(4 * var(--line-height-base));
+        margin-top: clamp(2rem, 8vw, 8rem);
         margin-bottom: calc(3 * var(--line-height-base));
     }
 
     h1 {
-        font-size: calc(6 * var(--font-size-base));
+        font-size: var(--font-size-h1);
         font-weight: normal;
         margin: 0;
     }
@@ -27,11 +28,20 @@
     }
 
     p {
-        font-size: calc(1.5 * var(--font-size-base));
+        font-size: max(var(--font-size-base), calc(0.33 * var(--font-size-h1)));
         max-width: 80rem;
     }
 
     .p1 {
-        font-size: calc(2 * var(--font-size-base));
+        font-size: max(var(--font-size-base), calc(0.5 * var(--font-size-h1)));
+    }
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+
+    a:hover {
+        background-color: var(--color-pft-yellow);
     }
 </style>
