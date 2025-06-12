@@ -86,7 +86,7 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
                 <div class="filter-group">
                     <label>Platform:</label>
                     <select
-                        class="filter-platform"
+                        class="filter-select"
                         value=${platform}
                         onChange=${handlePlatformChange}
                     >
@@ -99,7 +99,7 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
                 <div class="filter-group">
                     <label>Tag:</label>
                     <select
-                        class="filter-tag"
+                        class="filter-select"
                         value=${selectedTag}
                         onChange=${handleTagChange}
                     >
@@ -113,7 +113,7 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
                 <div class="filter-group">
                     <label>Type:</label>
                     <select
-                        class="filter-type"
+                        class="filter-select"
                         value=${selectedType}
                         onChange=${handleTypeChange}
                     >
