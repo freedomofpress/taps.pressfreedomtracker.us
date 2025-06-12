@@ -22,7 +22,7 @@
         grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, 1fr);
         grid-template-areas:
             "avatar   author"
-            "avatar   content"
+            "content  content"
             "metadata metadata";
     }
 
@@ -31,20 +31,6 @@
         padding: var(--padding);
         border-top: 1px solid var(--color-border);
         background: var(--color-background-subtle);
-    }
-
-    @container (min-width: 720px) {
-        .post-full {
-            grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, auto) minmax(var(--metadata-width), var(--metadata-width));
-            grid-template-areas:
-                "avatar author  metadata"
-                "avatar content metadata";
-        }
-
-        .post-metadata {
-            border-top: none;
-            border-left: 1px solid var(--color-border);
-        }
     }
 
     .post-avatar {
@@ -72,9 +58,27 @@
 
     .post-body {
         grid-area: content;
-        padding-right: var(--padding);
-        padding-bottom: var(--padding);
+        padding: var(--padding);
         max-width: 100%;
+    }
+
+    @container (min-width: 720px) {
+        .post-full {
+            grid-template-columns: calc(var(--avatar-size) + var(--padding)) minmax(0, auto) minmax(var(--metadata-width), var(--metadata-width));
+            grid-template-areas:
+                "avatar author  metadata"
+                "avatar content metadata";
+        }
+
+        .post-body {
+            padding-left: 0;
+            padding-top: 0;
+        }
+
+        .post-metadata {
+            border-top: none;
+            border-left: 1px solid var(--color-border);
+        }
     }
 
     .post-body a {
