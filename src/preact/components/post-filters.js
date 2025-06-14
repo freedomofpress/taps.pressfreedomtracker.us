@@ -6,6 +6,8 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
     const [platform, setPlatform] = useState(initialFilters.platform || '')
     const [selectedTag, setSelectedTag] = useState(initialFilters.selectedTag || '')
     const [selectedType, setSelectedType] = useState(initialFilters.selectedType || '')
+    const [startDate, setStartDate] = useState(initialFilters.startDate || '')
+    const [endDate, setEndDate] = useState(initialFilters.endDate || '')
 
     // Extract unique tags and types from posts
     const uniqueTags = [...new Set(posts.flatMap(post => post.tags || []).filter(tag => tag && tag.trim()))].sort()
@@ -17,7 +19,9 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
         setPlatform(initialFilters.platform || '')
         setSelectedTag(initialFilters.selectedTag || '')
         setSelectedType(initialFilters.selectedType || '')
-    }, [initialFilters.searchTerm, initialFilters.platform, initialFilters.selectedTag, initialFilters.selectedType])
+        setStartDate(initialFilters.startDate || '')
+        setEndDate(initialFilters.endDate || '')
+    }, [initialFilters.searchTerm, initialFilters.platform, initialFilters.selectedTag, initialFilters.selectedType, initialFilters.startDate, initialFilters.endDate])
 
     const updateFilters = (newFilters) => {
         onFiltersChange({
@@ -25,6 +29,8 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
             platform,
             selectedTag,
             selectedType,
+            startDate,
+            endDate,
             ...newFilters
         })
     }
@@ -53,12 +59,26 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
         updateFilters({ selectedType: newSelectedType })
     }
 
+    const handleStartDateChange = (e) => {
+        const newStartDate = e.target.value
+        setStartDate(newStartDate)
+        updateFilters({ startDate: newStartDate })
+    }
+
+    const handleEndDateChange = (e) => {
+        const newEndDate = e.target.value
+        setEndDate(newEndDate)
+        updateFilters({ endDate: newEndDate })
+    }
+
     const handleClearFilters = () => {
         setSearchTerm('')
         setPlatform('')
         setSelectedTag('')
         setSelectedType('')
-        onFiltersChange({ searchTerm: '', platform: '', selectedTag: '', selectedType: '' })
+        setStartDate('')
+        setEndDate('')
+        onFiltersChange({ searchTerm: '', platform: '', selectedTag: '', selectedType: '', startDate: '', endDate: '' })
     }
 
     return html`
@@ -66,10 +86,10 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
             <summary class="post-filters-summary">
                 <span>Filters</span>
                 <span class="filter-count" style=${
-                    (searchTerm || platform || selectedTag || selectedType) ?
+                    (searchTerm || platform || selectedTag || selectedType || startDate || endDate) ?
                     'display: inline;' : 'display: none;'
                 }>
-                    (${[searchTerm, platform, selectedTag, selectedType].filter(Boolean).length} active)
+                    (${[searchTerm, platform, selectedTag, selectedType, startDate, endDate].filter(Boolean).length} active)
                 </span>
             </summary>
             <div class="post-filters">
@@ -122,6 +142,27 @@ const PostFilters = ({ onFiltersChange, posts = [], initialFilters = {} }) => {
                             <option key=${type} value=${type}>${type}</option>
                         `)}
                     </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Date Range:</label>
+                    <div class="date-range">
+                        <input
+                            type="date"
+                            class="filter-date"
+                            value=${startDate}
+                            onChange=${handleStartDateChange}
+                            max=${endDate || undefined}
+                        />
+                        <span>to</span>
+                        <input
+                            type="date"
+                            class="filter-date"
+                            value=${endDate}
+                            onChange=${handleEndDateChange}
+                            min=${startDate || undefined}
+                        />
+                    </div>
                 </div>
 
                 <div class="filter-group">
