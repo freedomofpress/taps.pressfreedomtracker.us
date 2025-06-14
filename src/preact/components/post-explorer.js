@@ -106,11 +106,15 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
                     const content = (post.content || '').toLowerCase()
                     const types = (Array.isArray(post.type) ? post.type : []).join(' ').toLowerCase()
                     const tags = (Array.isArray(post.tags) ? post.tags : []).join(' ').toLowerCase()
+                    const primaryTarget = (post.primaryTarget || '').toLowerCase()
+                    const secondaryTarget = (post.secondaryTarget || '').toLowerCase()
 
                     searchTermMatch =
                         content.includes(searchTerm) ||
                         types.includes(searchTerm) ||
-                        tags.includes(searchTerm)
+                        tags.includes(searchTerm) ||
+                        primaryTarget.includes(searchTerm) ||
+                        secondaryTarget.includes(searchTerm)
                 }
 
                 // All conditions must match for the post to be included
