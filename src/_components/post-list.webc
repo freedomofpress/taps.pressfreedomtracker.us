@@ -1,4 +1,4 @@
 <div @raw="preact(
-    './src/preact/components/post-list.js',
+    'post-list.js',
     { posts: posts }
 )" data-post-list></div>
