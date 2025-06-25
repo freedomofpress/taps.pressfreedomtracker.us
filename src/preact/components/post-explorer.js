@@ -11,7 +11,9 @@ const getFiltersFromURL = () => {
         searchTerm: urlParams.get('search') || '',
         platform: urlParams.get('platform') || '',
         selectedTag: urlParams.get('tag') || '',
-        selectedType: urlParams.get('type') || ''
+        selectedType: urlParams.get('type') || '',
+        startDate: urlParams.get('start') || '',
+        endDate: urlParams.get('end') || ''
     }
 }
 
@@ -19,7 +21,7 @@ const hasActiveFiltersInURL = () => {
     if (typeof window === 'undefined') return false
 
     const urlParams = new URLSearchParams(window.location.search)
-    return urlParams.has('search') || urlParams.has('platform') || urlParams.has('tag') || urlParams.has('type')
+    return urlParams.has('search') || urlParams.has('platform') || urlParams.has('tag') || urlParams.has('type') || urlParams.has('start') || urlParams.has('end')
 }
 
 const updateURLWithFilters = (filters) => {
@@ -31,6 +33,8 @@ const updateURLWithFilters = (filters) => {
     if (filters.platform) urlParams.set('platform', filters.platform)
     if (filters.selectedTag) urlParams.set('tag', filters.selectedTag)
     if (filters.selectedType) urlParams.set('type', filters.selectedType)
+    if (filters.startDate) urlParams.set('start', filters.startDate)
+    if (filters.endDate) urlParams.set('end', filters.endDate)
 
     const newURL = urlParams.toString() ?
         `${window.location.pathname}?${urlParams.toString()}` :
@@ -81,7 +85,7 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
 
     useEffect(() => {
         // When filters are updated, reset post indices
-        if (!filters.platform && !filters.searchTerm && !filters.selectedTag && !filters.selectedType) {
+        if (!filters.platform && !filters.searchTerm && !filters.selectedTag && !filters.selectedType && !filters.startDate && !filters.endDate) {
             setPostStartIndex(initialRange[0])
         } else {
             setPostStartIndex(0)
@@ -100,21 +104,29 @@ const PostExplorer = ({ posts, postsPerPage = 25, initialRange = [0, 25] }) => {
                 // Type filter
                 const typeMatch = !filters.selectedType || (post.type && post.type.includes(filters.selectedType))
 
+                // Date range filter
+                const dateMatch = (!filters.startDate || post.date >= new Date(filters.startDate)) &&
+                                (!filters.endDate || post.date <= new Date(filters.endDate + 'T23:59:59'))
+
                 let searchTermMatch = true
                 if (filters.searchTerm) {
                     const searchTerm = filters.searchTerm.toLowerCase()
                     const content = (post.content || '').toLowerCase()
                     const types = (Array.isArray(post.type) ? post.type : []).join(' ').toLowerCase()
                     const tags = (Array.isArray(post.tags) ? post.tags : []).join(' ').toLowerCase()
+                    const primaryTarget = (post.primaryTarget || '').toLowerCase()
+                    const secondaryTarget = (post.secondaryTarget || '').toLowerCase()
 
                     searchTermMatch =
                         content.includes(searchTerm) ||
                         types.includes(searchTerm) ||
-                        tags.includes(searchTerm)
+                        tags.includes(searchTerm) ||
+                        primaryTarget.includes(searchTerm) ||
+                        secondaryTarget.includes(searchTerm)
                 }
 
                 // All conditions must match for the post to be included
-                return platformMatch && tagMatch && typeMatch && searchTermMatch
+                return platformMatch && tagMatch && typeMatch && searchTermMatch && dateMatch
             }).sort((a, b) => b.date - a.date)
         )
     }, [filters])
