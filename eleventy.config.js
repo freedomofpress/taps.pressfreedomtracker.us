@@ -62,6 +62,8 @@ export default async function(eleventyConfig) {
     })
 
     eleventyConfig.addPassthroughCopy("src/media")
+
+    eleventyConfig.addPassthroughCopy("src/_headers")
 }
 
 export const config = {
