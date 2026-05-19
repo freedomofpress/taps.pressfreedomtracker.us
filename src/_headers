@@ -1,0 +1,6 @@
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Referrer-Policy: same-origin
+  X-XSS-Protection: 1; mode=block
+  X-Frame-Options: DENY
+
