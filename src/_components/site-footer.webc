@@ -1,0 +1,41 @@
+<footer class="site-footer">
+    <p class="source-links">
+        Source data:&nbsp;
+        <a href="https://docs.google.com/spreadsheets/d/1vbsoLq-Z5_kJaV0GOFMOqyo3dL9S1SKfUSkNWdYtMtU/edit"
+           target="_blank" rel="noopener">Google&nbsp;Sheet</a>
+        <span class="sep">·</span>
+        <a href="/posts.csv"
+           target="_blank" rel="noopener">CSV</a>
+        <span class="sep">·</span>
+        <a href="/posts.json"
+           target="_blank" rel="noopener">JSON</a>
+    </p>
+</footer>
+
+<style>
+    .site-footer {
+        margin: 5rem 0 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--color-border);
+        text-align: center;
+        font-size: 1.4rem;
+        color: var(--color-muted);
+    }
+
+    .site-footer a {
+        color: var(--color-muted);
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .site-footer a:hover,
+    .site-footer a:focus {
+        color: var(--color-base);
+        text-decoration: underline;
+    }
+
+    .site-footer .sep {
+        margin: 0 0.4rem;
+        color: var(--color-muted-more);
+    }
+</style>

@@ -33,6 +33,7 @@
         <main>
             <div @raw="$data.content"></div>
         </main>
+        <site-footer></site-footer>
     </body>
 </html>
 
