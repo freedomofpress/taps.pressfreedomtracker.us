@@ -26,6 +26,9 @@
         <link rel="modulepreload" :href="asset('preact/entry.js')" id="preact-bundle" webc:keep>
         <link rel="stylesheet" :href="getBundleFileUrl('css')" webc:keep />
         <script :src="getBundleFileUrl('js')" type="module" webc:keep></script>
+
+        <!-- Analytics (production builds only) -->
+        <matomo-analytics webc:if="$data.env.prod" webc:nokeep></matomo-analytics>
     </head>
     <body>
         <fpf-banner></fpf-banner>
